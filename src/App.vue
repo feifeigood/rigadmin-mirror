@@ -6,7 +6,7 @@
 
 <script>
 const version = require('element-ui/package.json').version // element-ui version from node_modules
-const ORIGINAL_THEME = '#0960bd' // default color
+const ORIGINAL_THEME = '#409EFF' // default color
 
 export default  {
   name:  'App',
@@ -44,7 +44,7 @@ export default  {
         return () => {
           const originalCluster = this.getThemeCluster(ORIGINAL_THEME.replace('#', ''))
           const newStyle = this.updateStyle(this[variable], originalCluster, themeCluster)
-
+    
           let styleTag = document.getElementById(id)
           if (!styleTag) {
             styleTag = document.createElement('style')
@@ -59,7 +59,7 @@ export default  {
         const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
         await this.getCSSString(url, 'chalk')
       }
-
+      console.log(this.chalk)
       const chalkHandler = getHandler('chalk', 'chalk-style')
 
       chalkHandler()
