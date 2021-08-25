@@ -91,11 +91,11 @@ export default {
       if (path.lastIndexOf("/") > 0) {
         const tmpPath = path.substring(1, path.length);
         activePath = "/" + tmpPath.substring(0, tmpPath.indexOf("/"));
-      } else if ("/index" == path || "" == path) {
+      } else if ("/home" == path || "" == path) {
         if (!this.isFrist) {
           this.isFrist = true;
         } else {
-          activePath = "index";
+          activePath = "home";
         }
       }
       var routes = this.activeRoutes(activePath);
