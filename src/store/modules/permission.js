@@ -22,7 +22,7 @@ const permission = {
     SET_TOPBAR_ROUTES: (state, routes) => {
       // 顶部导航菜单默认添加统计报表栏指向首页
       const index = [{
-        path: 'index',
+        path: 'home',
         meta: { title: '统计报表', icon: 'dashboard'}
       }]
       state.topbarRouters = routes.concat(index);
