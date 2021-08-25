@@ -77,7 +77,7 @@
 		th {
 			word-break: break-word;
 			background-color: #f8f8f9;
-			color: #515a6e;
+			color: rgba(0, 0, 0, 0.85);
 			height: 40px;
 			font-size: 13px;
 		}
@@ -251,6 +251,7 @@
 .top-right-btn {
 	position: relative;
 	float: right;
+	margin-right: 16px;
 }
 /*flex*/
 .flex{
@@ -259,6 +260,11 @@
 .flex-center{
 	display: flex;
 	justify-content: center;
+	align-items: center;
+}
+.flex-between{
+	display: flex;
+	justify-content: space-between;
 	align-items: center;
 }
 .flex-50{

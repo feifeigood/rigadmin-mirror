@@ -121,7 +121,29 @@ aside {
 
 //main-container全局样式
 .app-container {
+  height: 100%;
   padding: 20px;
+  background-color: #eef0f3;
+  .app-container-search{
+    padding: 12px 10px 6px 10px;
+    margin-bottom: 16px;
+    background-color: #fff;
+    border-radius: 2px;
+    .el-form{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .el-form-item{
+        margin-bottom: 8px;
+      }
+    }
+  }
+  .app-container-content{
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 2px;
+  }
+
 }
 
 .components-container {
