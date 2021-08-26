@@ -35,6 +35,18 @@ export const getRouters = () => {
                         }
                     },
                     {
+                        "name": "Service",
+                        "path": "service",
+                        "hidden": false,
+                        "component": "monitor/service/index",
+                        "meta": {
+                            "title": "服务管理",
+                            "icon": "server",
+                            "noCache": true,
+                            "link": null
+                        }
+                    },
+                    {
                         "name": "Node",
                         "path": "node",
                         "hidden": false,

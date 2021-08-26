@@ -93,19 +93,19 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/monitor',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'service',
-        component: (resolve) => require(['@/views/monitor/service/index'], resolve),
-        name: 'Service',
-        meta: { title: '服务管理', icon: '',"noCache": true, }
-      }
-    ]
-  },
+  // {
+  //   path: '/monitor',
+  //   component: Layout,
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: 'service',
+  //       component: (resolve) => require(['@/views/monitor/service/index'], resolve),
+  //       name: 'Service',
+  //       meta: { title: '服务管理', icon: '',"noCache": true, }
+  //     }
+  //   ]
+  // },
 ]
 
 export default new Router({
