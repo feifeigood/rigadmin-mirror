@@ -106,6 +106,6 @@ export default {
   #app .sidebar-container .theme-dark .el-menu-item.is-active,
   #app .sidebar-container .theme-dark .nest-menu .el-submenu > .el-submenu__title.is-active, 
   #app .sidebar-container .theme-dark .el-submenu .el-menu-item.is-active{
-    background-color: var(--current-color,pink) !important;
+    background-color: var(--current-color,#0960bd) !important;
   }
 </style>

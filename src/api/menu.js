@@ -30,7 +30,7 @@ export const getRouters = () => {
                         "meta": {
                             "title": "项目管理",
                             "icon": "redis",
-                            "noCache": false,
+                            "noCache": true,
                             "link": null
                         }
                     },
@@ -42,7 +42,7 @@ export const getRouters = () => {
                         "meta": {
                             "title": "节点组管理",
                             "icon": "node",
-                            "noCache": false,
+                            "noCache": true,
                             "link": null
                         }
                     },

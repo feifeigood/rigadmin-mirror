@@ -28,7 +28,6 @@ export default  {
         return
       }
       if (typeof val !== 'string') return
-      console.log(val,oldVal)
       const themeCluster = this.getThemeCluster(val.replace('#', ''))
       const originalCluster = this.getThemeCluster(oldVal.replace('#', ''))
 
@@ -59,7 +58,6 @@ export default  {
         const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
         await this.getCSSString(url, 'chalk')
       }
-      console.log(this.chalk)
       const chalkHandler = getHandler('chalk', 'chalk-style')
 
       chalkHandler()

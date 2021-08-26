@@ -185,11 +185,12 @@ aside {
 
 .link-type,
 .link-type:focus {
-  color: #337ab7;
+  color: var(--current-color,#0960bd) !important;
+  opacity:0.65;
   cursor: pointer;
 
   &:hover {
-    color: rgb(32, 160, 255);
+    opacity: 1;
   }
 }
 
