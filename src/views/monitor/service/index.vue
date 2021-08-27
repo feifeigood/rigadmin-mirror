@@ -260,6 +260,10 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.queryParams={
+        project_id: undefined,
+        name: undefined,
+      },
       this.handleQuery();
     },
     /** 新增按钮操作 */

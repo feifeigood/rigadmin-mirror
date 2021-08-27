@@ -41,7 +41,7 @@ export const getRouters = () => {
                         "component": "monitor/service/index",
                         "meta": {
                             "title": "服务管理",
-                            "icon": "server",
+                            "icon": "service",
                             "noCache": true,
                             "link": null
                         }
