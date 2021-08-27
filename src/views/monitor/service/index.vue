@@ -52,27 +52,24 @@
 
       <el-table v-loading="loading" :data="serviceList" 
         border
+        :height="'calc(100vh - 326px)'"
       >
-        <el-table-column label="服务编号" align="center" prop="id" width="120"/>
-        <el-table-column label="服务名称" align="left" prop="name" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column label="服务编号" align="center" prop="id" width="100"/>
+        <el-table-column label="服务名称" align="left" prop="name" :show-overflow-tooltip="true" />
         <el-table-column label="服务说明" align="left" prop="description" :show-overflow-tooltip="true" />
         <el-table-column label="所属项目" align="left" prop="project_id" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ transProjectName(scope.row.project_id) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="所属节点组" align="left" prop="farm_id" :show-overflow-tooltip="true">
+        <el-table-column label="所属节点组" align="left" width="160" prop="farm_id" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ transNodeName(scope.row.farm_id) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="140" class-name="operate">
+        <el-table-column label="操作" align="center" width="180" class-name="operate">
           <template slot-scope="scope">
-            <el-link
+            <!-- <el-link
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
@@ -83,7 +80,17 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['monitor:service:delete']"
-            >删除</el-link>
+            >删除</el-link> -->
+            <el-link
+              type="primary"
+              icon="el-icon-link"
+              @click="handleBindExport(scope.row)"
+            >Exporters</el-link>
+            <el-link
+              type="primary"
+              icon="el-icon-link"
+              @click="handleBindRule(scope.row)"
+            >Rules</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -95,10 +102,6 @@
         @pagination="getList"
       />
     </div>
-
-
-
-
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -143,6 +146,17 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- exporter -->
+    <el-drawer
+      :with-header="false"
+      :visible.sync="showExporter"
+      direction="rtl"
+      size="50%">
+      <exporter-drawer
+        :serviceId="serviceId"
+      />
+    </el-drawer>
   </div>
 </template>
 
@@ -150,10 +164,14 @@
 import { listService, delService, addService, updateService} from "@/api/monitor/service";
 import { listProject} from "@/api/monitor/project";
 import { listNode} from "@/api/monitor/node";
+import ExporterDrawer from "./components/exporterDrawer.vue"
 export default {
   name: "Service",
+  components: { ExporterDrawer},
   data() {
     return {
+      showExporter:false,
+      serviceId: undefined,
       //operateNum 0: 无, 1: 新增，2: 修改
       operateNum: 0,
       //submitLoading
@@ -250,7 +268,7 @@ export default {
         description: undefined,
         farm_id:undefined
       };
-      this.resetForm("form");
+      //this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -365,6 +383,13 @@ export default {
     },
     transNodeName(id){
       return this.nodeList.filter(item=> item.id == id)[0]?.name || '-';
+    },
+    handleBindExport(row){
+      this.serviceId = row.id || undefined;
+      this.showExporter = true;
+    },
+    handleBindRule(row){
+
     }
   }
 };

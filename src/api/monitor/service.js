@@ -9,6 +9,14 @@ export function listService(query) {
   })
 }
 
+// 查询server详情
+export function getService(id) {
+  return request({
+    url: `/api/v1/services/${id}`,
+    method: 'get'
+  })
+}
+
 // 新增server
 export function addService(data) {
   return request({
