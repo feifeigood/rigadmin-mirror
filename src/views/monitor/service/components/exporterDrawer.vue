@@ -19,10 +19,10 @@
       :height="'calc(100vh - 140px)'"
     >
       <el-table-column label="ID" align="center" prop="id" width="60"/>
-      <el-table-column label="名称" align="left" prop="job" width="120" :show-overflow-tooltip="true" />
-      <el-table-column label="端口" align="left" prop="port" width="100" :show-overflow-tooltip="true" />
+      <el-table-column label="名称" align="left" prop="default_exporter.alias" width="160" :show-overflow-tooltip="true" />
+      <el-table-column label="端口" align="left" prop="port" width="80" :show-overflow-tooltip="true" />
       <el-table-column label="路径" align="left" prop="path" :show-overflow-tooltip="true" />
-      <el-table-column label="协议" align="left" prop="scheme" width="100" :show-overflow-tooltip="true" />
+      <el-table-column label="协议" align="left" prop="scheme" width="90" :show-overflow-tooltip="true" />
       <el-table-column label="操作" align="center" width="140" class-name="operate">
         <template slot-scope="scope">
           <el-link
@@ -58,17 +58,15 @@
             style="width: 100%"
             value-key="id"
             @change="handleExporterChange"
+            :disabled="operateNum==2"
           >
             <el-option 
               v-for="item in defaultExporterList"
               :key="item.id" 
-              :label="item.job"
+              :label="item.alias"
               :value="item">
             </el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="名称" prop="job">
-          <el-input v-model="form.job" disabled placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="采集端口" prop="port">
           <el-input v-model="form.port" placeholder="请输入采集端口" />
@@ -79,7 +77,7 @@
         <el-form-item label="协议" prop="scheme">
           <el-input v-model="form.scheme" placeholder="请输入协议" />
         </el-form-item>
-        <el-form-item label="所属客户端" prop="serviceName">
+        <el-form-item label="所属服务" prop="serviceName">
           <el-input v-model="form.serviceName" disabled/>
         </el-form-item>
       </el-form>
@@ -169,7 +167,7 @@ export default {
           const end = start + this.paginationParams.pageSize;
           this.exporterList = response?.exporters?.slice(start, end) || [];
           this.total = response?.exporters?.length || 0;
-          this.serviceName = response?.name;
+          this.serviceName = `${response?.name}----[${response?.project?.name}]`;
           this.loading = false;
         }
       ).catch(e=>{
@@ -206,8 +204,9 @@ export default {
     handleUpdate(row) {
       this.operateNum = 2;
       this.reset();
-      const data = row;
+      const data = {...row};
       this.form = data;
+      this.$set(this.form,'exporter',this.defaultExporterList.filter(item => item.id == data.default_exporter_id)[0]);
       this.form.serviceName= this.serviceName;
       this.open = true;
       this.title = "修改客户端";
@@ -242,6 +241,7 @@ export default {
           res.action = addExporter,
           res.params = {
             service_id: this.serviceId,
+            default_exporter_id:this.form.exporter.id,
             job: this.form.job,
             port: this.form.port,
             path: this.form.path,
@@ -251,8 +251,7 @@ export default {
         case 2:
           res.action = updateExporter,
           res.params = {
-            id: this.form.id,
-            service_id: this.serviceId,
+            id: this.form.exporter.id,
             job: this.form.job,
             port: this.form.port,
             path: this.form.path,
@@ -267,7 +266,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id;
-      const names = row.job;
+      const names = row.default_exporter.alias;
       console.log(row)
       this.$confirm('是否确认删除客户端名称为"' + names + '"的数据项?', "警告", {
           confirmButtonText: "确定",
@@ -294,6 +293,7 @@ export default {
     },
     handleExporterChange(exporter){
       console.log(exporter)
+      this.form.exporter = exporter;
       this.form.job = exporter.job;
       this.form.port = exporter.port;
       this.form.path = exporter.path;

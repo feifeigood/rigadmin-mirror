@@ -85,12 +85,12 @@
               type="primary"
               icon="el-icon-link"
               @click="handleBindExport(scope.row)"
-            >Exporters</el-link>
+            >客户端</el-link>
             <el-link
               type="primary"
               icon="el-icon-link"
               @click="handleBindRule(scope.row)"
-            >Rules</el-link>
+            >规则</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -124,7 +124,11 @@
           <el-input v-model="form.name" placeholder="请输入服务名称" />
         </el-form-item>
         <el-form-item label="服务说明" prop="description">
-          <el-input v-model="form.description" placeholder="请输入服务说明" />
+          <el-input 
+            v-model="form.description"
+            type="textarea"
+            :autosize="{ minRows: 2}" 
+            placeholder="请输入服务说明" />
         </el-form-item>
         <el-form-item label="节点组" prop="farm_id">
           <el-select 

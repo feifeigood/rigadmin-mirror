@@ -81,9 +81,11 @@ service.interceptors.response.use(res => {
     }
   },
   error => {
-    console.log(error)
+    console.log(error.response)
     let { message } = error;
-    console.log(message)
+    if (error?.response?.data?.error) {
+      message = error?.response?.data?.error;
+    }
     if (message == "Network Error") {
       message = "后端接口连接异常";
     }

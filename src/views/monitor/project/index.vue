@@ -84,7 +84,12 @@
           <el-input v-model="form.name" placeholder="请输入项目名称" />
         </el-form-item>
         <el-form-item label="项目描述" prop="description">
-          <el-input v-model="form.description" placeholder="请输入项目描述" />
+          <el-input 
+            v-model="form.description" 
+            placeholder="请输入项目描述" 
+            type="textarea"
+            :autosize="{ minRows: 3}"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -200,7 +205,7 @@ export default {
     handleUpdate(row) {
       this.operateNum = 2;
       this.reset();
-      const data = row;
+      const data = {...row};
       this.form = data;
       this.open = true;
       this.title = "修改项目";
