@@ -21,9 +21,9 @@ export function addUser(data) {
 }
 
 // 修改用户
-export function updateUser(uid,data) {
+export function updateUser(data) {
   return request({
-    url: `/api/v1/users/${uid}`,
+    url: `/api/v1/users/${data.uid}`,
     method: 'put',
     data: data
   })

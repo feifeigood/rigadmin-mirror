@@ -8,7 +8,7 @@
             placeholder="请输入用户名称"
             clearable
             size="small"
-            style="width: 180px"
+            style="width: 280px"
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
@@ -38,7 +38,7 @@
       <el-table v-loading="loading" :data="userList" 
         border
       >
-        <el-table-column label="用户编号" align="center" key="uid" prop="uid" />
+        <el-table-column label="用户编号" align="center" key="uid" prop="uid" width="160"/>
         <el-table-column label="用户名称" align="left" key="username" prop="username" :show-overflow-tooltip="true" />
         <el-table-column label="用户全称" align="left" key="fullname" prop="fullname" :show-overflow-tooltip="true" />
         <el-table-column label="用户邮箱" align="left" key="email" prop="email"  :show-overflow-tooltip="true"/>
@@ -276,9 +276,11 @@ export default {
         case 2:
           res.action = updateUser,
           res.params = {
+            uid : this.form.uid,
             username: this.form.username,
             fullname: this.form.fullname,
             phone: this.form.phone,
+            email: this.form.email,
           }
           break;
         default:
@@ -320,11 +322,22 @@ export default {
       this.$confirm('确认要"' + text + '""' + row.username + '"用户吗?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return changeUserStatus(row.uid);
-        }).then(() => {
-          this.msgSuccess(text + "成功");
+          type: "warning",
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true;
+              changeUserStatus(row.uid).then(()=>{
+                instance.confirmButtonLoading = false;
+                this.msgSuccess(text + "成功");
+                done();
+              }).catch(e=>{
+                instance.confirmButtonLoading = false;
+                this.msgError("删除失败");
+              })
+            } else {
+              done();
+            }
+          }
         }).catch(function() {
           row.disabled = !row.disabled ;
         });
