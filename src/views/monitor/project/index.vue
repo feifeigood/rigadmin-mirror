@@ -38,7 +38,7 @@
       <el-table v-loading="loading" :data="projectList" 
         border
       >
-        <el-table-column label="项目编号" align="center" prop="id" width="120"/>
+        <el-table-column label="项目编号" align="center" prop="id" width="80"/>
         <el-table-column label="项目名称" align="left" prop="name" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <router-link :to="{ name: 'Service', params: { projectId: scope.row.id }}" class="link-type">

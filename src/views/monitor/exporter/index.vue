@@ -38,11 +38,11 @@
       <el-table v-loading="loading" :data="exporterList" 
         border
       >
-        <el-table-column label="客户端编号" align="center" prop="id" width="120"/>
-        <el-table-column label="客户端名称" align="left" prop="job" :show-overflow-tooltip="true" />
-        <el-table-column label="端口" align="left" prop="port" width="120"/>
+        <el-table-column label="编号" align="center" prop="id" width="80"/>
+        <el-table-column label="名称" align="left" prop="job" :show-overflow-tooltip="true" />
+        <el-table-column label="端口" align="left" prop="port" width="100"/>
         <el-table-column label="路径" align="left" prop="path" :show-overflow-tooltip="true" />
-        <el-table-column label="协议" align="left" prop="scheme" width="120"/>
+        <el-table-column label="协议" align="left" prop="scheme" width="100"/>
         <el-table-column label="别名" align="left" prop="alias" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="140" class-name="operate">
           <template slot-scope="scope">

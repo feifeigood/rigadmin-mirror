@@ -54,7 +54,7 @@
         border
         :height="'calc(100vh - 326px)'"
       >
-        <el-table-column label="服务编号" align="center" prop="id" width="100"/>
+        <el-table-column label="服务编号" align="center" prop="id" width="80"/>
         <el-table-column label="服务名称" align="left" prop="name" :show-overflow-tooltip="true" />
         <el-table-column label="服务说明" align="left" prop="description" :show-overflow-tooltip="true" />
         <el-table-column label="所属项目" align="left" prop="project_id" :show-overflow-tooltip="true">
