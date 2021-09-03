@@ -18,10 +18,11 @@ export function addProject(data) {
   })
 }
 
+
 // 修改project
 export function updateProject(data) {
   return request({
-    url: '/api/v1/projects',
+    url: `/api/v1/projects/${data.id}`,
     method: 'put',
     data: data
   })
@@ -34,5 +35,13 @@ export function delProject(id){
       reject()
       solve()
     }, 2000);
+  })
+}
+
+// 状态修改
+export function changeProjectStatus(id) {
+  return request({
+    url: `/api/v1/projects/${id}/toggle`,
+    method: 'put'
   })
 }

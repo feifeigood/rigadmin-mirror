@@ -125,18 +125,15 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: "客户端名称不能为空", trigger: "blur" }
+        port: [
+          { required: true, message: "客户端端口不能为空", trigger: "blur" }
         ],
-        description: [
-          { required: true, message: "客户端说明不能为空", trigger: "blur" }
+        path: [
+          { required: true, message: "客户端路径不能为空", trigger: "blur" }
         ],
-        project_id: [
-          { required: true, message: "项目名称不能为空", trigger: "blur" }
+        scheme: [
+          { required: true, message: "客户端协议不能为空", trigger: "blur" }
         ],
-        farm_id: [
-          { required: true, message: "节点组不能为空", trigger: "blur" }
-        ]
       },
       paginationParams:{
         pageNum:1,

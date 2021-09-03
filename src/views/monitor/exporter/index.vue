@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <div class="app-container-search">
-      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" @submit.native.prevent>
-        <el-form-item label="项目名称" prop="name">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="88px" @submit.native.prevent>
+        <el-form-item label="客户端名称" prop="job">
           <el-input
-            v-model="queryParams.name"
-            placeholder="请输入项目名称"
+            v-model="queryParams.job"
+            placeholder="请输入客户端名称"
             clearable
             size="small"
-            style="width: 380px"
+            style="width: 280px"
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
@@ -29,48 +29,35 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasPermi="['monitor:project:add']"
+            v-hasPermi="['monitor:exporter:add']"
           >新增</el-button>
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
 
-      <el-table v-loading="loading" :data="projectList" 
+      <el-table v-loading="loading" :data="exporterList" 
         border
       >
-        <el-table-column label="项目编号" align="center" prop="id" width="120"/>
-        <el-table-column label="项目名称" align="left" prop="name" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            <router-link :to="{ name: 'Service', params: { projectId: scope.row.id }}" class="link-type">
-              <span>{{ scope.row.name }}</span>
-            </router-link>
-          </template>
-        </el-table-column>
-        <el-table-column label="项目描述" align="left" prop="description" :show-overflow-tooltip="true" />
-        <el-table-column label="状态" align="center" key="enabled" width="80">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.enabled"
-              :active-value="1"
-              :inactive-value="0"
-              @change="handleStatusChange(scope.row)"
-            ></el-switch>
-          </template>
-        </el-table-column>  
+        <el-table-column label="客户端编号" align="center" prop="id" width="120"/>
+        <el-table-column label="客户端名称" align="left" prop="job" :show-overflow-tooltip="true" />
+        <el-table-column label="端口" align="left" prop="port" width="120"/>
+        <el-table-column label="路径" align="left" prop="path" :show-overflow-tooltip="true" />
+        <el-table-column label="协议" align="left" prop="scheme" width="120"/>
+        <el-table-column label="别名" align="left" prop="alias" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="140" class-name="operate">
           <template slot-scope="scope">
             <el-link
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['monitor:project:edit']"
+              v-hasPermi="['monitor:exporter:edit']"
             >修改</el-link>
-            <!-- <el-link
+            <el-link
               type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['monitor:project:delete']"
-            >删除</el-link> -->
+              v-hasPermi="['monitor:exporter:delete']"
+            >删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -90,16 +77,20 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="项目名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入项目名称" />
+        <el-form-item label="名称" prop="job">
+          <el-input v-model="form.job" placeholder="请输入名称" />
         </el-form-item>
-        <el-form-item label="项目描述" prop="description">
-          <el-input 
-            v-model="form.description" 
-            placeholder="请输入项目描述" 
-            type="textarea"
-            :autosize="{ minRows: 3}"
-          />
+        <el-form-item label="端口" prop="port">
+          <el-input v-model.number="form.port" placeholder="请输入端口" />
+        </el-form-item>
+        <el-form-item label="路径" prop="path">
+          <el-input v-model="form.path" placeholder="请输入路径" />
+        </el-form-item>
+        <el-form-item label="协议" prop="scheme">
+          <el-input v-model="form.scheme" placeholder="请输入协议" />
+        </el-form-item>
+        <el-form-item label="别名" prop="alias">
+          <el-input v-model="form.alias" placeholder="请输入别名" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -111,10 +102,10 @@
 </template>
 
 <script>
-import { listProject, delProject, addProject, updateProject,changeProjectStatus} from "@/api/monitor/project";
+import { listDefaultExporter, delDefaultExporter, addDefaultExporter, updateDefaultExporter} from "@/api/monitor/exporter";
 
 export default {
-  name: "Project",
+  name: "DefaultExporter",
   data() {
     return {
       //operateNum 0: 无, 1: 新增，2: 修改
@@ -133,8 +124,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // project数据
-      projectList: [],
+      // exporter数据
+      exporterList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -147,12 +138,22 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: "项目名称不能为空", trigger: "blur" }
+        job: [
+          { required: true, message: "名称不能为空", trigger: "blur" }
         ],
-        description: [
-          { required: true, message: "项目描述不能为空", trigger: "blur" }
-        ]
+        alias: [
+          { required: true, message: "别名不能为空", trigger: "blur" }
+        ],
+        port: [
+          { required: true, message: "端口不能为空", trigger: "blur" },
+          { type: 'number', message: '端口不能为非数字值', trigger: "blur"}
+        ],
+        path: [
+          { required: true, message: "路径不能为空", trigger: "blur" }
+        ],
+        scheme: [
+          { required: true, message: "协议不能为空", trigger: "blur" }
+        ],
       },
       paginationParams:{
         pageNum:1,
@@ -164,19 +165,19 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询project列表 */
+    /** 查询exporter列表 */
     getList() {
       this.loading = true;
       console.log(this.queryParams)
-      listProject(this.queryParams).then(response => {
+      listDefaultExporter(this.queryParams).then(response => {
           const start = (this.paginationParams.pageNum-1) * this.paginationParams.pageSize;
           const end = start + this.paginationParams.pageSize;
-          this.projectList = response.slice(start, end);
+          this.exporterList = response.slice(start, end);
           this.total = response.length;
           this.loading = false;
         }
       ).catch(e=>{
-        this.projectList=[];
+        this.exporterList=[];
         this.loading = false;
       });
     },
@@ -189,9 +190,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        name: undefined,
-        description: undefined,
-      };
+        job: undefined,
+        port: undefined,
+        path: undefined,
+        scheme: undefined,
+        alias: undefined
+    };
       //this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -209,7 +213,7 @@ export default {
       this.operateNum = 1;
       this.reset();
       this.open = true;
-      this.title = "添加项目";
+      this.title = "添加客户端";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -218,7 +222,7 @@ export default {
       const data = {...row};
       this.form = data;
       this.open = true;
-      this.title = "修改项目";
+      this.title = "修改客户端";
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -247,18 +251,24 @@ export default {
       }
       switch (this.operateNum) {
         case 1:
-          res.action = addProject,
+          res.action = addDefaultExporter,
           res.params = {
-            name: this.form.name,
-            description: this.form.description
+            job: this.form.job,
+            port: +this.form.port,
+            path: this.form.path,
+            scheme: this.form.scheme,
+            alias: this.form.alias
           }
           break;
         case 2:
-          res.action = updateProject,
+          res.action = updateDefaultExporter,
           res.params = {
             id: this.form.id,
-            name: this.form.name,
-            description: this.form.description
+            job: this.form.job,
+            port: +this.form.port,
+            path: this.form.path,
+            scheme: this.form.scheme,
+            alias: this.form.alias
           }
           break;
         default:
@@ -269,16 +279,16 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id;
-      const names = row.name;
+      const names = row.job;
       console.log(row)
-      this.$confirm('是否确认删除项目名称为"' + names + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除客户端名称为"' + names + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
           beforeClose: (action, instance, done) => {
             if (action === 'confirm') {
               instance.confirmButtonLoading = true;
-              delProject(ids).then(()=>{
+              delDefaultExporter(ids).then(()=>{
                 instance.confirmButtonLoading = false;
                 done();
               }).catch(e=>{
@@ -295,32 +305,6 @@ export default {
         })
     },
 
-      //状态修改
-    handleStatusChange(row) {
-      let text = row.enabled === 1 ? "启用" : "停用";
-      this.$confirm('确认要"' + text + '""' + row.name + '"项目吗?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              changeProjectStatus(row.id).then(()=>{
-                instance.confirmButtonLoading = false;
-                this.msgSuccess(text + "成功");
-                done();
-              }).catch(e=>{
-                instance.confirmButtonLoading = false;
-                this.msgError("删除失败");
-              })
-            } else {
-              done();
-            }
-          }
-        }).catch(function() {
-          row.enabled = Math.abs(row.enabled-1 ) ;
-        });
-    },
 
   }
 };

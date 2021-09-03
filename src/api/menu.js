@@ -47,6 +47,18 @@ export const getRouters = () => {
                         }
                     },
                     {
+                        "name": "Exporter",
+                        "path": "exporter",
+                        "hidden": false,
+                        "component": "monitor/exporter/index",
+                        "meta": {
+                            "title": "客户端管理",
+                            "icon": "client",
+                            "noCache": true,
+                            "link": null
+                        }
+                    },
+                    {
                         "name": "Node",
                         "path": "node",
                         "hidden": false,
@@ -86,18 +98,18 @@ export const getRouters = () => {
                             "link": null
                         }
                     },
-                    {
-                        "name": "Role",
-                        "path": "role",
-                        "hidden": false,
-                        "component": "system/role/index",
-                        "meta": {
-                            "title": "角色管理",
-                            "icon": "peoples",
-                            "noCache": false,
-                            "link": null
-                        }
-                    },
+                    // {
+                    //     "name": "Role",
+                    //     "path": "role",
+                    //     "hidden": false,
+                    //     "component": "system/role/index",
+                    //     "meta": {
+                    //         "title": "角色管理",
+                    //         "icon": "peoples",
+                    //         "noCache": false,
+                    //         "link": null
+                    //     }
+                    // },
                 ]
             },
 
