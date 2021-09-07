@@ -245,6 +245,7 @@ export default {
         this.title = "修改规则";
         getRuleSample(this.selectedId).then(response => {
           this.form = response;
+          this.form.default_value = +response.default_value;
           this.form.labels = this.tranObjToArr(response?.labels);
           this.form.annotations = this.tranObjToArr(response?.annotations);
           this.loading = false;
@@ -333,6 +334,7 @@ export default {
             exporterId: this.selectedExporterId,
             data: {
               ...this.form,
+              default_value: this.form?.default_value?.toString(),
               labels: this.tranArrToObj(this.form.labels),
               annotations: this.tranArrToObj(this.form.annotations),
             },
@@ -342,6 +344,7 @@ export default {
           res.action = updateRuleSample,
           res.params = {
             ...this.form,
+            default_value: this.form?.default_value?.toString(),
             labels: this.tranArrToObj(this.form.labels),
             annotations: this.tranArrToObj(this.form.annotations),
           }
