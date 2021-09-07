@@ -18,8 +18,6 @@
         </el-form-item>
       </el-form>
     </div>
-
-
     <div class="app-container-content">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
@@ -47,14 +45,9 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
+              v-if="scope.row.source == 'rigserver'"
               v-hasPermi="['monitor:node:edit']"
             >修改</el-link>
-            <el-link
-              type="danger"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-              v-hasPermi="['monitor:node:delete']"
-            >删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -66,11 +59,6 @@
         @pagination="getList"
       />
     </div>
-
-
-
-
-
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -78,7 +66,7 @@
           <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="来源" prop="source">
-          <el-input v-model="form.source" />
+          <el-input v-model="form.source" disabled />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -242,34 +230,7 @@ export default {
       }
       return res;
     },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const ids = row.id;
-      const names = row.name;
-      console.log(row)
-      this.$confirm('是否确认删除节点组名称为"' + names + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              delNode(ids).then(()=>{
-                instance.confirmButtonLoading = false;
-                done();
-              }).catch(e=>{
-                instance.confirmButtonLoading = false;
-                this.msgError("删除失败");
-              })
-            } else {
-              done();
-            }
-          }
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-    },
+
 
 
   }

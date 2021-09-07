@@ -23,6 +23,18 @@ export const getRouters = () => {
                 },
                 "children": [
                     {
+                        "name": "Exporter",
+                        "path": "exporter",
+                        "hidden": false,
+                        "component": "monitor/exporter/index",
+                        "meta": {
+                            "title": "客户端管理",
+                            "icon": "client",
+                            "noCache": true,
+                            "link": null
+                        }
+                    },
+                    {
                         "name": "Project",
                         "path": "project",
                         "hidden": false,
@@ -46,18 +58,7 @@ export const getRouters = () => {
                             "link": null
                         }
                     },
-                    {
-                        "name": "Exporter",
-                        "path": "exporter",
-                        "hidden": false,
-                        "component": "monitor/exporter/index",
-                        "meta": {
-                            "title": "客户端管理",
-                            "icon": "client",
-                            "noCache": true,
-                            "link": null
-                        }
-                    },
+
                     {
                         "name": "Node",
                         "path": "node",
