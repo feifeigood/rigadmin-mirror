@@ -2,9 +2,9 @@
   <div class="app-container">
     <div class="app-container-search">
       <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="88px" @submit.native.prevent>
-        <el-form-item label="所属节点组" prop="node_id">
+        <el-form-item label="所属节点组" prop="farm_id">
           <el-select 
-            v-model="queryParams.node_id" 
+            v-model="queryParams.farm_id" 
             filterable placeholder="请选择节点组" size="small"
             style="width: 240px"
             @change="handleQuery"
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { listHostByFarm, delHost, addHost, updateHost} from "@/api/monitor/host";
+import { listHost, delHost, addHost, updateHost} from "@/api/monitor/host";
 import { listNode} from "@/api/monitor/node";
 
 export default {
@@ -126,7 +126,7 @@ export default {
       nodeList:[],
       // 查询参数
       queryParams: {
-        node_id: undefined,
+        farm_id: undefined,
         name: undefined,
       },
 
@@ -145,12 +145,14 @@ export default {
   },
   created() {
     this.loading = true;
-    if (this.$route.params.projectId) {
-      this.queryParams.node_id = this.$route.params.projectId;
-    }
+
     Promise.all([listNode()]).then(([response_node]) => {
       this.nodeList = response_node;
-      this.queryParams.node_id = response_node[0].id;
+      if (this.$route.params.farm_id) {
+        this.queryParams.farm_id = this.$route.params.farm_id;
+      }else{
+        this.queryParams.farm_id = response_node[0].id;
+      }
       this.getList();
     }).catch(e =>{
       this.nodeList = [];
@@ -161,8 +163,7 @@ export default {
     /** 查询host列表 */
     getList() {
       this.loading = true;
-      listHostByFarm({farmId :this.queryParams.node_id, data:{name:this.queryParams.name }}).then(response => {
-          response = response.hosts || [];
+      listHost(this.queryParams).then(response => {
           const start = (this.paginationParams.pageNum-1) * this.paginationParams.pageSize;
           const end = start + this.paginationParams.pageSize;
           const res = response.slice(start, end);
@@ -193,7 +194,7 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.queryParams={
-        node_id: undefined,
+        farm_id: undefined,
         name: undefined,
       },
       this.handleQuery();
