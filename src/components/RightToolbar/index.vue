@@ -8,17 +8,30 @@
         <el-button size="mini" circle icon="el-icon-refresh" @click="refresh()" />
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="columns">
-        <el-button size="mini" circle icon="el-icon-menu" @click="showColumn()" />
+        <el-popover
+          placement="bottom-end"
+          width="180"
+          trigger="click"
+        >
+        
+          <div class="cloumnWrap">
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <el-divider></el-divider>
+            <div class="cloumnList">
+              <el-scrollbar style="height:100%">
+                <el-checkbox-group v-model="checkedList" @change="handleCheckedCitiesChange">
+                  <el-checkbox class="cloumnItem" v-for="item in columns" :label="item.key" :key="item.key">{{item.label}}</el-checkbox>
+                </el-checkbox-group>
+              </el-scrollbar>
+            </div>
+          </div>
+
+
+
+          <el-button size="mini" circle icon="el-icon-menu" slot="reference"/>
+        </el-popover>
       </el-tooltip>
     </el-row>
-    <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-transfer
-        :titles="['显示', '隐藏']"
-        v-model="value"
-        :data="columns"
-        @change="dataChange"
-      ></el-transfer>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -27,11 +40,9 @@ export default {
   data() {
     return {
       // 显隐数据
-      value: [],
-      // 弹出层标题
-      title: "显示/隐藏",
-      // 是否显示弹出层
-      open: false,
+      checkedList: [],
+      checkAll: false,
+      isIndeterminate: true
     };
   },
   props: {
@@ -46,10 +57,13 @@ export default {
   created() {
     // 显隐列初始默认隐藏列
     for (let item in this.columns) {
-      if (this.columns[item].visible === false) {
-        this.value.push(parseInt(item));
+      if (this.columns[item].visible === true) {
+        this.checkedList.push(this.columns[item].key);
       }
     }
+    let checkedCount = this.checkedList?.length || 0;
+    this.isIndeterminate = checkedCount > 0 && checkedCount < (this.columns?.length || 0);
+    this.checkAll = checkedCount === (this.columns?.length || 0);
   },
   methods: {
     // 搜索
@@ -60,21 +74,32 @@ export default {
     refresh() {
       this.$emit("queryTable");
     },
-    // 右侧列表元素变化
+    handleCheckAllChange(val) {
+      this.checkedList = val ? this.columns.map(item=> item.key) : [];
+      this.isIndeterminate = false;
+      this.dataChange(this.checkedList);
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.columns.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.columns.length;
+      this.dataChange(value);
+    },
+
     dataChange(data) {
       for (var item in this.columns) {
         const key = this.columns[item].key;
-        this.columns[item].visible = !data.includes(key);
+        this.columns[item].visible = !!data.includes(key);
       }
     },
-    // 打开显隐列dialog
-    showColumn() {
-      this.open = true;
-    },
+
   },
 };
 </script>
 <style lang="scss" scoped>
+::v-deep .el-divider--horizontal{
+  margin: 8px 0;
+}
 ::v-deep .el-transfer__button {
   border-radius: 50%;
   padding: 12px;
@@ -83,5 +108,24 @@ export default {
 }
 ::v-deep .el-transfer__button:first-child {
   margin-bottom: 10px;
+}
+::v-deep .is-circle{
+  margin-left: 10px !important;
+}
+::v-deep .el-scrollbar__wrap{
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.cloumnWrap{
+  width: 160px;
+  margin-right: -20px;
+  .cloumnList{
+    height: 260px;
+    .cloumnItem{
+      display: block;
+      margin: 8px 0;
+    }
+  }
+
 }
 </style>

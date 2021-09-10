@@ -152,15 +152,7 @@ export default {
         { key: 5, label: `默认值`, visible: true },
         { key: 6, label: `状态`, visible: true },
       ],
-      // 表单校验
-      rules: {
-        name: [
-          { required: true, message: "规则名称不能为空", trigger: "blur" }
-        ],
-        description: [
-          { required: true, message: "规则描述不能为空", trigger: "blur" }
-        ]
-      },
+
       paginationParams:{
         pageNum:1,
         pageSize: 10,

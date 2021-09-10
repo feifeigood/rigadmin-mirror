@@ -63,13 +63,41 @@ export const getRouters = () => {
                         "name": "Node",
                         "path": "node",
                         "hidden": false,
-                        "component": "monitor/node/index",
+                        "redirect": "noRedirect",
+                        "component": "ParentView",
+                        "alwaysShow": true,
                         "meta": {
                             "title": "节点组管理",
                             "icon": "node",
                             "noCache": true,
                             "link": null
-                        }
+                        },
+                        "children": [
+                            {
+                                "name": "Farm",
+                                "path": "farm",
+                                "hidden": false,
+                                "component": "monitor/node/index",
+                                "meta": {
+                                    "title": "节点组管理",
+                                     //"icon": "blank",
+                                    "noCache": false,
+                                    "link": null
+                                }
+                            },
+                            {
+                                "name": "Host",
+                                "path": "host",
+                                "hidden": false,
+                                "component": "monitor/node/host",
+                                "meta": {
+                                    "title": "节点管理",
+                                    //"icon": "blank",
+                                    "noCache": false,
+                                    "link": null
+                                }
+                            },
+                        ]
                     },
                 ]
             },
