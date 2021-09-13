@@ -93,3 +93,39 @@
 .dialog-footer{
   text-align: right;
 }
+
+.el_select2Textarea{
+  .el-select{
+    width: 100%;
+    height: 1px;
+    min-height: 72px;
+    .el-select__caret{
+      display: none;
+    }
+    .el-select__tags{
+      align-items: flex-start;
+      height: 100%;
+      padding: 6px;
+    }
+    &>.el-input{
+      height: 100%;
+      &>.el-input__inner{
+        height: 100% !important;
+      }
+    }
+  }
+}
+.el_select2Input{
+  ::v-deep .el-select{
+    width: 460px;
+    .el-select__caret{
+      display: none;
+    }
+    .el-select__tags{
+      align-items: flex-start;
+    }
+  }
+}
+.selectToInputPopper{
+	display: none;
+}

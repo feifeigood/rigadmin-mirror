@@ -96,6 +96,7 @@
       :selectedId="selectedId"
       :selectedExporterId="queryParams.exporterId"
       :exporterList="exporterList"
+      @getList="getList"
     />
 
     <rule-detail 

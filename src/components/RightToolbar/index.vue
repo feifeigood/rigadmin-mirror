@@ -65,6 +65,11 @@ export default {
     this.isIndeterminate = checkedCount > 0 && checkedCount < (this.columns?.length || 0);
     this.checkAll = checkedCount === (this.columns?.length || 0);
   },
+  watch:{
+    columns(val){
+      this.checkAll = this.checkedList?.length === (val?.length || 0);
+    }
+  },
   methods: {
     // 搜索
     toggleSearch() {

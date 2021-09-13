@@ -69,7 +69,7 @@ export const getRouters = () => {
                         "meta": {
                             "title": "节点组管理",
                             "icon": "node",
-                            "noCache": true,
+                            "noCache": false,
                             "link": null
                         },
                         "children": [
@@ -81,7 +81,7 @@ export const getRouters = () => {
                                 "meta": {
                                     "title": "节点组管理",
                                      //"icon": "blank",
-                                    "noCache": false,
+                                    "noCache": true,
                                     "link": null
                                 }
                             },
@@ -93,7 +93,7 @@ export const getRouters = () => {
                                 "meta": {
                                     "title": "节点管理",
                                     //"icon": "blank",
-                                    "noCache": false,
+                                    "noCache": true,
                                     "link": null
                                 }
                             },
@@ -123,7 +123,7 @@ export const getRouters = () => {
                         "meta": {
                             "title": "用户管理",
                             "icon": "user",
-                            "noCache": false,
+                            "noCache": true,
                             "link": null
                         }
                     },
@@ -135,7 +135,7 @@ export const getRouters = () => {
                     //     "meta": {
                     //         "title": "角色管理",
                     //         "icon": "peoples",
-                    //         "noCache": false,
+                    //         "noCache": true,
                     //         "link": null
                     //     }
                     // },

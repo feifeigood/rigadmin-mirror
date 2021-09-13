@@ -10,7 +10,7 @@
             @change="handleQuery"
           >
             <el-option 
-              v-for="item in nodeList"
+              v-for="item in farmList"
               :key="item.id" 
               :label="item.name"
               :value="item.id">
@@ -94,17 +94,24 @@
     </div>
 
     <!-- 添加或修改参数配置对话框 -->
-
-
+    <add-form 
+      :operateNum.sync="operateNum"
+      :selectedId="selectedId"
+      :selectedFarmId="queryParams.farm_id"
+      :farmList="farmList"
+      @getList="getList"
+    />
   </div>
 </template>
 
 <script>
 import { listHost, delHost, addHost, updateHost} from "@/api/monitor/host";
 import { listNode} from "@/api/monitor/node";
+import AddForm from './components/addForm.vue';
 
 export default {
   name: "Host",
+  components: { AddForm },
   data() {
     return {
       //operateNum 0: 无, 1: 新增，2: 修改
@@ -113,6 +120,7 @@ export default {
       loading: true,
       // 选中数组
       items: [],
+      selectedId: undefined,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -123,7 +131,7 @@ export default {
       total: 0,
       // host数据
       hostList: [],
-      nodeList:[],
+      farmList:[],
       // 查询参数
       queryParams: {
         farm_id: undefined,
@@ -146,16 +154,16 @@ export default {
   created() {
     this.loading = true;
 
-    Promise.all([listNode()]).then(([response_node]) => {
-      this.nodeList = response_node;
+    Promise.all([listNode()]).then(([response_farm]) => {
+      this.farmList = response_farm;
       if (this.$route.params.farm_id) {
         this.queryParams.farm_id = this.$route.params.farm_id;
       }else{
-        this.queryParams.farm_id = response_node[0].id;
+        this.queryParams.farm_id = response_farm[0].id;
       }
       this.getList();
     }).catch(e =>{
-      this.nodeList = [];
+      this.farmList = [];
     })
     
   },
@@ -206,6 +214,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.operateNum = 2;
+      this.selectedId = row.id;
     },
 
     /** 删除按钮操作 */
@@ -237,7 +246,7 @@ export default {
         })
     },
     transNodeName(id){
-      return this.nodeList.filter(item=> item.id == id)[0]?.name || '-';
+      return this.farmList.filter(item=> item.id == id)[0]?.name || '-';
     },
     getColums(arr){
       if (arr.length == 0) {

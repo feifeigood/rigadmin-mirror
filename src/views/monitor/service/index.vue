@@ -64,7 +64,9 @@
         </el-table-column>
         <el-table-column label="所属节点组" align="left" width="160" prop="farm_id" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <span>{{ transNodeName(scope.row.farm_id) }}</span>
+            <router-link :to="{ name: 'Host', params: { farm_id: scope.row.farm_id }}" class="link-type">
+              <span>{{ transNodeName(scope.row.farm_id) }}</span>
+            </router-link>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="180" class-name="operate">

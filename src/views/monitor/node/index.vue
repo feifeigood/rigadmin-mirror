@@ -37,7 +37,13 @@
         border
       >
         <el-table-column label="编号" align="center" prop="id" width="80"/>
-        <el-table-column label="名称" align="left" prop="name" :show-overflow-tooltip="true" />
+        <el-table-column label="名称" align="left" prop="name" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <router-link :to="{ name: 'Host', params: { farm_id: scope.row.id }}" class="link-type">
+              <span>{{ scope.row.name }}</span>
+            </router-link>
+          </template>
+        </el-table-column>
         <el-table-column label="来源" align="left" prop="source" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="140" class-name="operate">
           <template slot-scope="scope">
