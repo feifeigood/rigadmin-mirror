@@ -35,6 +35,7 @@
               ]"
             >
               <el-select
+                ref="selectToInput"
                 v-model="form.name" 
                 multiple
                 filterable
@@ -152,6 +153,9 @@ export default {
         this.reset();
         this.title = '新增节点';
         this.open = true;
+        this.$nextTick(() => {
+          this.$refs.selectToInput.$refs.input.addEventListener('blur', this.handleSelectBlur)
+        })
       }else if(val == 2){
         this.loading = true;
         this.open = true;
@@ -197,7 +201,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        name: undefined,
+        name: [],
         labels:[{
           key: undefined,
           value: undefined
@@ -270,6 +274,11 @@ export default {
     handleDelLabel(index){
       this.form.labels.splice(index,1)
     },
+    handleSelectBlur(e){
+      if (!this.form.name.includes(e.target.value) && !!e.target.value) {
+        this.form.name.push(e.target.value);
+      }
+    },
     
     validateLabelKey(index){
       const labelList = [...this.form.labels];
@@ -281,6 +290,9 @@ export default {
         callback()
       }
     },
+  },
+  beforeDestroy(){
+    this.$refs.selectToInput.$refs.input.removeEventListener('blur', this.handleSelectBlur)
   }
 
 }
