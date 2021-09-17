@@ -1,86 +1,63 @@
 <template>
-  <div class="app-container home">
-    <h1>rigadmin监控管理</h1>
+  <div class="app-container home" 
+    :class="{isLoading: loading}" 
+    v-loading='loading'
+    element-loading-background="#fff"
+  >
+    <panel-group 
+      :panelList="panelList"
+      @handlePanelClick="handlePanelClick" 
+    />
+    <rank />
   </div>
 </template>
 
 <script>
+import PanelGroup from './dashboard/PanelGroup'
+import Rank from './dashboard/rank'
+import { listDefaultExporter, getExporterNumber} from "@/api/monitor/exporter";
 export default {
   name: "index",
-  data() {
-    return {
-      // 版本号
-      version: "3.4.0",
-    };
+  components: {
+    PanelGroup,
+    Rank
   },
-  methods: {
-    goTarget(href) {
-      window.open(href, "_blank");
-    },
+  data(){
+    return{
+      loading: true,
+      panelList: [],
+    }
   },
+  methods:{
+    handlePanelClick(val){
+      console.log(val)
+    }
+  },
+  created(){
+    this.loading = true;
+    listDefaultExporter().then(response => {
+      if (response?.length > 0) {
+        Promise.all(response.map(item=> getExporterNumber(item.id))).then(resArr => {
+          this.panelList = response.map((item, idx) => {
+            return{
+              ...item,
+              num: resArr[idx]?.length || 0
+            }
+          }).filter(item=> item.visible == 1)
+          this.loading = false;
+        })
+      }
+    })
+
+  }
 };
 </script>
 
 <style scoped lang="scss">
-.home {
-  blockquote {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 17.5px;
-    border-left: 5px solid #eee;
-  }
-  hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 0;
-    border-top: 1px solid #eee;
-  }
-  .col-item {
-    margin-bottom: 20px;
-  }
-
-  ul {
-    padding: 0;
-    margin: 0;
-  }
-
-  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  color: #676a6c;
-  overflow-x: hidden;
-
-  ul {
-    list-style-type: none;
-  }
-
-  h4 {
-    margin-top: 0px;
-  }
-
-  h2 {
-    margin-top: 10px;
-    font-size: 26px;
-    font-weight: 100;
-  }
-
-  p {
-    margin-top: 10px;
-
-    b {
-      font-weight: 700;
-    }
-  }
-
-  .update-log {
-    ol {
-      display: block;
-      list-style-type: decimal;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      margin-inline-start: 0;
-      margin-inline-end: 0;
-      padding-inline-start: 40px;
-    }
+.home{
+  &.isLoading{
+    height: calc(100vh - 85px);
+    overflow: hidden;
   }
 }
 </style>

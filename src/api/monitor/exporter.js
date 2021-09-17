@@ -8,6 +8,13 @@ export function listDefaultExporter(query) {
     params: query
   })
 }
+//查询exporter数目
+export function getExporterNumber(id) {
+  return request({
+    url: `/api/v1/defaultexporters/${id}/hosts`,
+    method: 'get',
+  })
+}
 // 新增Defaultexporter
 export function addDefaultExporter(data) {
   return request({
