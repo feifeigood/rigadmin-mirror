@@ -9,10 +9,16 @@
         <ul class="list">
           <li
             v-for="(v,idx) in item.data" :key="idx"
+            :class="{active: idx< 3}"
           >
-            <span :class="{active: idx< 3}">{{idx + 1}}</span>
-            <span>{{v.instance}}</span>
-            <span>{{`${v.value}${item.isPer? '%':''}`}}</span>
+            <div class="serialNum">{{idx + 1}}</div>
+            <div class="textWrap">
+              <span>{{v.instance}}</span>
+              <span class="progressWrap">
+                <el-progress :percentage="+v.value > 100?100:+v.value" :format="progressFormat(item.isPer)"></el-progress>
+              </span>
+            </div>
+
           </li>
         </ul>
       </el-scrollbar>
@@ -59,6 +65,17 @@ export default {
     }
 
   },
+  methods:{
+    progressFormat(isPer) {
+      return (val)=>{
+        if (isPer) {
+          return val + '%';
+        }else{
+          return val.toString();
+        }
+      }
+    }
+  },
   created(){
     this.rankList.forEach( (item,idx) => {
       listRank(item.name).then(response => {
@@ -104,18 +121,11 @@ export default {
       }
       .list{
         li{
+          display: flex;
+          align-items: center;
           padding: 8px 12px;
-          &>span{
-            color: rgba(0,0,0,.6);
-            font-size: 14px;
-            font-weight: 600;
-          }
-          &>span.active{
-            background-color: #314659!important;
-            color: #fff!important;
-          }
-          &>span:first-child{
-            display: inline-block;
+          &>.serialNum{
+            flex: 0 0 20px;
             background-color: #f0f2f5;
             border-radius: 20px;
             font-size: 12px;
@@ -125,9 +135,19 @@ export default {
             width: 20px;
             text-align: center;
             margin-right: 26px;
+            color: rgba(0,0,0,.6);
           }
-          &>span:last-child{
-            float: right;
+          &>.textWrap{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            color: rgba(0,0,0,.6);
+            font-size: 14px;
+            font-weight: 600;
+          }
+          &.active>.serialNum{
+            background-color: var(--current-color,#0960bd) !important;
+            color: #fff!important;
           }
         }
       }
