@@ -73,8 +73,6 @@
                 <el-form-item 
                     :prop="'labels.' + index + '.key'"
                     :rules="[{
-                      required: true, message: 'key不能为空', trigger: 'change'
-                    },{
                       validator: validateLabelKey(index), trigger: 'change' 
                     }]"
                   >
@@ -86,9 +84,6 @@
                   </el-form-item>
                   <el-form-item 
                     :prop="'labels.' + index + '.value'"
-                    :rules="[{
-                      required: true, message: 'value不能为空', trigger: 'change'
-                    }]"
                   >
                     <el-input 
                       :style="{width: '490px'}"
@@ -284,7 +279,7 @@ export default {
       const labelList = [...this.form.labels];
       labelList.splice(index,1);
       return (rule, value, callback)=>{
-        if (labelList.some(item => item.key.trim() == value.trim())) {
+        if (labelList.some(item => item.key?.trim() == value?.trim())) {
           callback(new Error('key值不能重复'));
         }
         callback()
