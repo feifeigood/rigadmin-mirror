@@ -10,7 +10,8 @@
       <div class="rank-itemWrap">
         <div class="title">{{ item.alias }}</div>
         <el-scrollbar wrap-class="scrollbar-wrapper">
-          <ul class="list">
+          <el-empty description="暂无数据" :image-size="60" v-if="item.data.length == 0"></el-empty>
+          <ul class="list" v-else>
             <li
               v-for="(v, idx) in item.data"
               :key="idx"
@@ -102,8 +103,8 @@ export default {
             instance: item?.metric?.instance,
             value: item?.value[1]?.substring(0, 4),
           }));
-          this.rankList[idx].data = data;
         }
+        this.rankList[idx].data = data;
         this.rankList[idx].loading = false;
       });
     });
