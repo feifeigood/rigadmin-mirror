@@ -18,7 +18,7 @@
       </div>
     </div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="Oracle" name="first">
+      <!-- <el-tab-pane label="Oracle" name="first">
         <oracle-tab />
       </el-tab-pane>
       <el-tab-pane label="MySQL" name="second">
@@ -26,35 +26,61 @@
       </el-tab-pane>
       <el-tab-pane label="主机" name="third">
         <host-tab />
+      </el-tab-pane> -->
+      <el-tab-pane 
+        :key="item.id"
+        v-for="item in panelList"
+        :label="item.alias"
+        :name="item.logo"
+      >
+      <component :is="`${item.logo}-tab`"></component>
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 <script>
-import HostTab from './hostTab.vue';
 import MysqlTab from './mysqlTab.vue';
-import oracleTab from './oracleTab.vue';
-  export default {
-  components: { oracleTab, MysqlTab, HostTab },
-    data() {
-      return {
-        activeName: 'first',
-        // 查询参数
-        queryParams: {
-          name: undefined,
-        },
-      };
-    },
-    methods: {
-      handleClick(tab, event) {
-        console.log(tab, event);
-      },
-      /** 搜索按钮操作 */
-      handleQuery() {
-      },
+import OracleTab from './oracleTab.vue';
+import LinuxTab from './linuxTab.vue';
 
+const tabCompList = {
+  mysql: MysqlTab,
+  oracle: OracleTab,
+  linux: LinuxTab,
+}
+
+export default {
+  components: { OracleTab, MysqlTab, LinuxTab },
+  props:{
+    panelList: {
+      type: Array,
+      default: [],
+    },
+  },
+  data() {
+    return {
+      activeName: undefined,
+      // 查询参数
+      queryParams: {
+        name: undefined,
+      },
+    };
+  },
+  methods: {
+    handleClick(tab, event) {
+      console.log(tab, event);
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+    },
+
+  },
+  watch:{
+    panelList(){
+      this.activeName = this.panelList[0]?.logo
     }
-  };
+  }
+};
 </script>
 <style lang="scss" scoped>
 .resource-container{

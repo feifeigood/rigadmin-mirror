@@ -1,10 +1,10 @@
 <template>
-  <div>host-tab</div>
+  <div>linux-tab</div>
 </template>
 
 <script>
 export default {
-  name:'HostTab'
+  name:'LinuxTab'
 }
 </script>
 
