@@ -35,7 +35,7 @@ export function diskIOPSRank() {
         url: 'api/v1/query',
         method: 'get',
         params: {
-            query: 'topk(10, rate(node_disk_reads_completed_total{device=~"[a-z]*[a-z]"}[5m]))'
+            query: 'topk(10, avg(rate(node_disk_reads_completed_total{device=~"[a-z]*[a-z]"}[5m])) by (instance))'
         }
     })
 }
