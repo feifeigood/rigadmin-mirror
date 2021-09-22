@@ -188,7 +188,7 @@ export default {
         scheme: this.defaultExporterList[0]?.scheme,
         serviceName: this.serviceName
       };
-      //this.resetForm("form");
+      this.resetForm("form");
     },
     /** 新增按钮操作 */
     handleAdd() {

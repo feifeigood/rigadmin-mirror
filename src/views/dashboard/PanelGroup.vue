@@ -1,6 +1,6 @@
 <template>
-  <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col"
+  <el-row :gutter="18" class="panel-group">
+    <el-col :span="6" class="card-panel-col"
       v-for="item in panelList" :key="item.id"
     >
       <div class="card-panel" @click="handlePanelClick(item.id)">
@@ -15,7 +15,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :span="6" class="card-panel-col">
       <div class="card-panel" @click="handlePanelClick('shoppings')">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="alter" class-name="card-panel-icon" />
@@ -58,6 +58,7 @@ export default {
 
   .card-panel-col {
     margin-bottom: 32px;
+    overflow: hidden;
   }
 
   .card-panel {
@@ -72,6 +73,7 @@ export default {
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
+    border-radius: 16px;
 
     &:hover {
       .card-panel-icon {

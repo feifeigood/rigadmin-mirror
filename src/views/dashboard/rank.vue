@@ -1,27 +1,29 @@
 <template>
-  <el-row class="rank-container">
+  <el-row :gutter="18" class="rank-container">
     <el-col :span="6" class="rank-item"
       v-for="item in rankList" :key="item.name"
       v-loading="item.loading"
     >
-      <div class="title">{{item.alias}}</div>
-      <el-scrollbar wrap-class="scrollbar-wrapper">
-        <ul class="list">
-          <li
-            v-for="(v,idx) in item.data" :key="idx"
-            :class="{active: idx< 3}"
-          >
-            <div class="serialNum">{{idx + 1}}</div>
-            <div class="textWrap">
-              <span>{{v.instance}}</span>
-              <span class="progressWrap">
-                <el-progress :percentage="+v.value > 100?100:+v.value" :format="progressFormat(+v.value,item.isPer)"></el-progress>
-              </span>
-            </div>
+      <div class="rank-itemWrap">
+        <div class="title">{{item.alias}}</div>
+        <el-scrollbar wrap-class="scrollbar-wrapper">
+          <ul class="list">
+            <li
+              v-for="(v,idx) in item.data" :key="idx"
+              :class="{active: idx< 3}"
+            >
+              <div class="serialNum">{{idx + 1}}</div>
+              <div class="textWrap">
+                <span>{{v.instance}}</span>
+                <span class="progressWrap">
+                  <el-progress :percentage="+v.value > 100?100:+v.value" :format="progressFormat(+v.value,item.isPer)"></el-progress>
+                </span>
+              </div>
 
-          </li>
-        </ul>
-      </el-scrollbar>
+            </li>
+          </ul>
+        </el-scrollbar>
+      </div>
     </el-col>
   </el-row>
 </template>
@@ -82,7 +84,7 @@ export default {
         let data = [];
         if (response?.data?.result?.length > 0) {
           const res = response?.data?.result;
-          data = res.map(item => ({
+          data = res.slice(0,5).map(item => ({
             instance: item?.metric?.instance,
             value: item?.value[1]?.substring(0,4)
           }))
@@ -97,13 +99,20 @@ export default {
 
 <style lang="scss" scoped>
   .rank-container{
-    height: 400px;
-    background-color: #fff;
-    padding: 8px 0;
-    box-shadow: 4px 4px 40px rgb(0 0 0 / 5%);
+    height: 300px;
+    // background-color: #fff;
+    // padding: 8px 0;
+    // box-shadow: 4px 4px 40px rgb(0 0 0 / 5%);
     .rank-item{
       height: 100%;
-      border-right: 1px solid rgba(0,0,0,.15);
+      overflow: hidden;
+      .rank-itemWrap{
+        height: 100%;
+        background: #fff;
+        box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
+        border-color: rgba(0, 0, 0, .05);
+        border-radius: 16px;
+      }
       ::v-deep .el-scrollbar{
         height: calc(100% - 36px);
         .scrollbar-wrapper{

@@ -285,7 +285,7 @@ export default {
         description: undefined,
         farm_id:undefined
       };
-      //this.resetForm("form");
+      this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {

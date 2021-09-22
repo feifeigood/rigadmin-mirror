@@ -299,7 +299,7 @@ export default {
           value: undefined
         }],
       };
-      //this.resetForm("form");
+      this.resetForm("form");
     },
     /** 提交按钮 */
     submitForm: function() {

@@ -2,7 +2,7 @@
   <el-dialog :title="title" :visible.sync="open" width="760px" @close="handleClose" append-to-body>
     <div v-loading="loading">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-row>
+        <el-row v-if="operateNum == 1">
           <el-col :span="24">
             <el-form-item label="客户端">
               <el-select 
@@ -15,16 +15,16 @@
                 <el-option 
                   v-for="item in exporterList"
                   :key="item.default_exporter_id" 
-                  :label="item.alias"
+                  :label="item.default_exporter.alias"
                   :value="item.default_exporter_id">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="operateNum == 1">
           <el-col :span="24">
-            <el-form-item label="模版规则">
+            <el-form-item label="模版规则" prop="sample_id">
               <el-select 
                 v-model="form.sample_id" 
                 placeholder="请选择模版规" 
@@ -45,7 +45,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="规则名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入规则名称" />
+              <el-input v-model="form.name" placeholder="请输入规则名称" disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -62,6 +62,7 @@
                 :autosize="{ minRows: 2}"
                 v-model="form.clause" 
                 placeholder="请输入表达式" 
+                disabled
               />
             </el-form-item>
           </el-col>
@@ -73,6 +74,7 @@
                 v-model="form.comparator" 
                 placeholder="请选择对比符" size="small"
                 style="width: 100%"
+                disabled
               >
                 <el-option 
                   v-for="val in comparatorList"
@@ -97,6 +99,7 @@
                 placeholder="请输入规则描述" 
                 type="textarea"
                 :autosize="{ minRows: 3}"
+                disabled
               />
             </el-form-item>
           </el-col>
@@ -120,6 +123,7 @@
                       :style="{width: '120px'}"
                       v-model="item.key" 
                       placeholder="请输入key" 
+                      disabled
                     />
                   </el-form-item>
                   <el-form-item 
@@ -129,13 +133,14 @@
                     }]"
                   >
                     <el-input 
-                      :style="{width: '490px'}"
+                      :style="{width: '520px'}"
                       v-model="item.value" 
                       placeholder="请输入value" 
+                      :disabled="item.key != 'severity'"
                     />
                   </el-form-item>
                   <i class="el-icon-close" 
-                    v-if="form.labels.length > 1"
+                    v-if="form.labels.length == -1"
                     @click="handleDelLabel(index)"
                   ></i>
                 </div>
@@ -143,6 +148,7 @@
                 <a
                   class="addWrap"
                   @click="handleAddLabel"
+                  v-if="false"
                 >
                   <i class="el-icon-plus"></i>
                   <span>增加标签</span>
@@ -170,6 +176,7 @@
                       :style="{width: '120px'}"
                       v-model="item.key" 
                       placeholder="请输入key" 
+                      disabled
                     />
                   </el-form-item>
                   <el-form-item 
@@ -179,13 +186,14 @@
                     }]"
                   >
                     <el-input 
-                      :style="{width: '490px'}"
+                      :style="{width: '520px'}"
                       v-model="item.value" 
-                      placeholder="请输入value" 
+                      placeholder="请输入value"
+                      disabled 
                     />
                   </el-form-item>
                   <i class="el-icon-close" 
-                    v-if="form.annotations.length > 1"
+                    v-if="form.annotations.length == -1"
                     @click="handleDelAnnotation(index)"
                   ></i>
                 </div>
@@ -193,6 +201,7 @@
                 <a
                   class="addWrap"
                   @click="handleAddAnnotation"
+                  v-if="false"
                 >
                   <i class="el-icon-plus"></i>
                   <span>增加注解</span>
@@ -306,6 +315,7 @@ export default {
     transRuleResponse(response){
       return {
         ...response,
+        clause: response.sample.clause,
         description: response.description || response.sample.description,
         comparator: response.comparator || response.sample.comparator,
         def_val: response.sample_def_val || response.sample.default_value,
@@ -356,7 +366,7 @@ export default {
           value: undefined
         }],
       };
-      //this.resetForm("form");
+      this.resetForm("form");
     },
     /** 提交按钮 */
     submitForm: function() {

@@ -12,7 +12,7 @@
       </span>
       <span class="itemWrap">
         <span class="label">expr:</span>
-        <span class="content">{{`${detailData.clause} ${detailData.comparator} ${detailData.default_value}`}}</span>
+        <span class="content">{{`${detailData.clause}`}}</span>
       </span>
       <span class="itemWrap isObject">
         <span class="label">labels:</span>
