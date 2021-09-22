@@ -9,18 +9,21 @@
       @handlePanelClick="handlePanelClick" 
     />
     <rank />
+    <resource />
   </div>
 </template>
 
 <script>
 import PanelGroup from './dashboard/PanelGroup'
 import Rank from './dashboard/rank'
+import Resource from './dashboard/resource/index.vue'
 import { listDefaultExporter, getExporterNumber} from "@/api/monitor/exporter";
 export default {
   name: "index",
   components: {
     PanelGroup,
-    Rank
+    Rank,
+    Resource
   },
   data(){
     return{
