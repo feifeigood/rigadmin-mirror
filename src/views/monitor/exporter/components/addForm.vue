@@ -100,6 +100,7 @@
                       :style="{width: '120px'}"
                       v-model="item.key" 
                       placeholder="请输入key" 
+                      :disabled="item.key == 'severity'"
                     />
                   </el-form-item>
                   <el-form-item 
@@ -115,7 +116,7 @@
                     />
                   </el-form-item>
                   <i class="el-icon-close" 
-                    v-if="form.labels.length > 1"
+                    v-if="form.labels.length > 1 && item.key !== 'severity'"
                     @click="handleDelLabel(index)"
                   ></i>
                 </div>
@@ -291,7 +292,7 @@ export default {
         comparator: undefined,
         default_value:undefined,
         labels:[{
-          key: undefined,
+          key: 'severity',
           value: undefined
         }],
         annotations:[{
