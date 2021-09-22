@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || '监控管理系统' // 标题
+const name = defaultSettings.title || 'RIG监控管理系统' // 标题
 
 const port = process.env.port || process.env.npm_config_port || 80 // 端口
 
@@ -38,6 +38,13 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      },
+      [process.env.VUE_APP_ALERTPAGER_API]:{
+        target: `http://alertpager.monitoring.ecn.zenlayer.net`,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_ALERTPAGER_API]: ''
         }
       }
     },
