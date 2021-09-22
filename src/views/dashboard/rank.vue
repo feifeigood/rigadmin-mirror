@@ -15,7 +15,7 @@
             <div class="textWrap">
               <span>{{v.instance}}</span>
               <span class="progressWrap">
-                <el-progress :percentage="+v.value > 100?100:+v.value" :format="progressFormat(item.isPer)"></el-progress>
+                <el-progress :percentage="+v.value > 100?100:+v.value" :format="progressFormat(+v.value,item.isPer)"></el-progress>
               </span>
             </div>
 
@@ -66,12 +66,12 @@ export default {
 
   },
   methods:{
-    progressFormat(isPer) {
-      return (val)=>{
+    progressFormat(value,isPer) {
+      return ()=>{
         if (isPer) {
-          return val + '%';
+          return value + '%';
         }else{
-          return val.toString();
+          return value.toString();
         }
       }
     }

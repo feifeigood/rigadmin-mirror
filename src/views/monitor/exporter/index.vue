@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <rule-sample 
-      v-if="showRuleSample"
+      v-if="showRuleSample" 
       :selectedExporterId="selectedExporterId"
       :exporterList = "exporterList"
       :showRuleSample.sync="showRuleSample"

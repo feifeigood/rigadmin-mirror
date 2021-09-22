@@ -10,12 +10,32 @@
                 placeholder="请选择所属客户端" 
                 size="small"
                 style="width: 100%"
-                disabled
+                @change="handleExporterChange"
               >
                 <el-option 
                   v-for="item in exporterList"
-                  :key="item.id" 
+                  :key="item.default_exporter_id" 
                   :label="item.alias"
+                  :value="item.default_exporter_id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="模版规则">
+              <el-select 
+                v-model="form.sample_id" 
+                placeholder="请选择模版规" 
+                size="small"
+                style="width: 100%"
+                @change="handleRulesampleChange"
+              >
+                <el-option 
+                  v-for="item in rulesampleList"
+                  :key="item.id" 
+                  :label="item.name"
                   :value="item.id">
                 </el-option>
               </el-select>
@@ -64,8 +84,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="默认值" prop="default_value">
-              <el-input v-model="form.default_value" placeholder="默认值" />
+            <el-form-item label="默认值" prop="def_val">
+              <el-input v-model="form.def_val" placeholder="默认值" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -191,17 +211,23 @@
 </template>
 
 <script>
-import { getRuleSample, delRuleSample, addRuleSample, updateRuleSample,changeRuleSampleStatus} from "@/api/monitor/rulesample";
+import { getRule, addRule, updateRule} from "@/api/monitor/rule";
+import { getService } from "@/api/monitor/service";
+import { listRuleSample, getRuleSample} from "@/api/monitor/rulesample";
 import * as v from '@/utils/validate'
+
 export default {
   props: {
     operateNum: Number,
     selectedId: Number,
-    selectedExporterId: Number,
-    exporterList: Array
+    selectedServiceId: Number,
+    serviceList: Array
   },
   data(){
     return{
+      rulesampleList:[],
+      exporterList: [],
+      selectedExporterId: undefined,
       comparatorList:['==', '!=', '<=', '<', '>=', '>'],
       loading: false,
       submitLoading: false,
@@ -209,6 +235,9 @@ export default {
       open: false,
       form:{},
       rules:{
+        sample_id:[
+          { required: true, message: "模版规则不能为空", trigger: "change" }
+        ],
         name: [
           { required: true, message: "规则名称不能为空", trigger: "change" }
         ],
@@ -221,7 +250,7 @@ export default {
         comparator: [
           { required: true, message: "对比符不能为空", trigger: "change" }
         ],
-        default_value: [
+        def_val: [
           { required: true, message: "默认值不能为空", trigger: "change" },
           { validator: this.validateNumber(), trigger: "change" }
         ],
@@ -234,19 +263,28 @@ export default {
   watch:{
     operateNum(val){
       if (val == 1) {
+        this.loading = true;
         this.reset();
         this.title = '新增规则';
         this.open = true;
+        getService(this.selectedServiceId).then(response => {
+            this.exporterList = response?.exporters || [];
+            this.selectedExporterId = response?.exporters[0]?.default_exporter_id;
+            this.getRulesampleList(response?.exporters[0]?.default_exporter_id);
+            this.loading = false;
+          }
+        ).catch(e=>{
+          this.open = false;
+        });
       }else if(val == 2){
         this.loading = true;
         this.open = true;
         this.reset();
         this.title = "修改规则";
-        getRuleSample(this.selectedId).then(response => {
-          this.form = response;
-          this.form.default_value = response.default_value;
-          this.form.labels = this.tranObjToArr(response?.labels);
-          this.form.annotations = this.tranObjToArr(response?.annotations);
+        getRule(this.selectedId).then(response => {
+          this.form = this.transRuleResponse(response);
+          this.form.labels = this.tranObjToArr(this.form?.labels);
+          this.form.annotations = this.tranObjToArr(this.form?.annotations);
           this.loading = false;
         }).catch(e=>{
           this.open = false;
@@ -257,6 +295,24 @@ export default {
   },
 
   methods:{
+    /** 查询rulesample列表 */
+    getRulesampleList(exporterId) {
+      listRuleSample(exporterId).then(response => {
+          this.rulesampleList = response;
+        }
+      ).catch(e=>{
+      });
+    },
+    transRuleResponse(response){
+      return {
+        ...response,
+        description: response.description || response.sample.description,
+        comparator: response.comparator || response.sample.comparator,
+        def_val: response.sample_def_val || response.sample.default_value,
+        labels: response.labels || response.sample.labels,
+        annotations: response.annotations || response.sample.annotations,
+      }
+    },
     tranObjToArr(obj){
       if (!obj) {
         return []
@@ -284,12 +340,13 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        sample_id: undefined,
         name: undefined,
         clause: undefined,
         duration: undefined,
         description: undefined,
         comparator: undefined,
-        default_value:undefined,
+        def_val:undefined,
         labels:[{
           key: undefined,
           value: undefined
@@ -328,24 +385,27 @@ export default {
       }
       switch (this.operateNum) {
         case 1:
-          res.action = addRuleSample,
+          res.action = addRule,
           res.params = {
-            exporterId: this.selectedExporterId,
+            serviceId: this.selectedServiceId,
             data: {
               ...this.form,
-              default_value: this.form?.default_value,
               labels: this.tranArrToObj(this.form.labels),
               annotations: this.tranArrToObj(this.form.annotations),
             },
           }
           break;
         case 2:
-          res.action = updateRuleSample,
+          res.action = updateRule,
           res.params = {
-            ...this.form,
-            default_value: this.form?.default_value,
-            labels: this.tranArrToObj(this.form.labels),
-            annotations: this.tranArrToObj(this.form.annotations),
+            id: this.form.id,
+            data: {
+              name: this.form.name,
+              clause: this.form.clause,
+              duration: this.form.duration,
+              def_val: this.form.def_val,
+              labels: this.tranArrToObj(this.form.labels),
+            }
           }
           break;
         default:
@@ -378,6 +438,24 @@ export default {
     },
     handleDelAnnotation(index){
       this.form.annotations.splice(index,1)
+    },
+    handleExporterChange(v){
+      this.selectedExporterId = v;
+      this.rulesampleList = [];
+      this.getRulesampleList(v);
+    },
+    handleRulesampleChange(v){
+      getRuleSample(v).then(response => {
+        console.log(v)
+        this.form.name = response.name;
+        this.form.clause = response.clause;
+        this.form.duration = response.duration;
+        this.form.description = response.description;
+        this.form.comparator = response.comparator;
+        this.form.def_val = response.default_value;
+        this.form.labels = this.tranObjToArr(response.labels);
+        this.form.annotations = this.tranObjToArr(response.annotations);
+      })
     },
     validateLabelKey(index){
       const labelList = [...this.form.labels];

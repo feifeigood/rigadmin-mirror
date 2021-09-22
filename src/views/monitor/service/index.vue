@@ -1,168 +1,175 @@
 <template>
   <div class="app-container">
-    <div class="app-container-search">
-      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" @submit.native.prevent>
-        <el-form-item label="项目名称" prop="project_id">
-          <el-select 
-            v-model="queryParams.project_id" 
-            filterable placeholder="请选择项目名称" size="small"
-            style="width: 240px"
-            @change="handleQuery"
-          >
-            <el-option 
-              v-for="item in projectList"
-              :key="item.id" 
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="服务名称" prop="name">
-          <el-input
-            v-model="queryParams.name"
-            placeholder="请输入服务名称"
-            clearable
-            size="small"
-            style="width: 240px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-
-
-    <div class="app-container-content">
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAdd"
-            v-hasPermi="['monitor:service:add']"
-          >新增</el-button>
-        </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-      </el-row>
-
-      <el-table v-loading="loading" :data="serviceList" 
-        border
-        :height="'calc(100vh - 326px)'"
-      >
-        <el-table-column label="服务编号" align="center" prop="id" width="80"/>
-        <el-table-column label="服务名称" align="left" prop="name" :show-overflow-tooltip="true" />
-        <el-table-column label="服务说明" align="left" prop="description" :show-overflow-tooltip="true" />
-        <el-table-column label="所属项目" align="left" prop="project_id" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            <span>{{ transProjectName(scope.row.project_id) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="所属节点组" align="left" width="160" prop="farm_id" :show-overflow-tooltip="true">
-          <template slot-scope="scope">
-            <router-link :to="{ name: 'Host', params: { farm_id: scope.row.farm_id }}" class="link-type">
-              <span>{{ transNodeName(scope.row.farm_id) }}</span>
-            </router-link>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="180" class-name="operate">
-          <template slot-scope="scope">
-            <!-- <el-link
-              type="primary"
-              icon="el-icon-edit"
-              @click="handleUpdate(scope.row)"
-              v-hasPermi="['monitor:service:edit']"
-            >修改</el-link>
-            <el-link
-              type="danger"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-              v-hasPermi="['monitor:service:delete']"
-            >删除</el-link> -->
-            <el-link
-              type="primary"
-              icon="el-icon-link"
-              @click="handleBindExport(scope.row)"
-            >客户端</el-link>
-            <el-link
-              type="primary"
-              icon="el-icon-link"
-              @click="handleBindRule(scope.row)"
-            >规则</el-link>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="paginationParams.pageNum"
-        :limit.sync="paginationParams.pageSize"
-        @pagination="getList"
-      />
-    </div>
-
-    <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="项目名称" prop="project_id">
-          <el-select 
-            v-model="form.project_id" 
-            filterable placeholder="请选择项目名称" size="small"
-            style="width: 100%"
-          >
-            <el-option 
-              v-for="item in projectList"
-              :key="item.id" 
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="服务名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入服务名称" />
-        </el-form-item>
-        <el-form-item label="服务说明" prop="description">
-          <el-input 
-            v-model="form.description"
-            type="textarea"
-            :autosize="{ minRows: 2}" 
-            placeholder="请输入服务说明" />
-        </el-form-item>
-        <el-form-item label="节点组" prop="farm_id">
-          <el-select 
-            v-model="form.farm_id" 
-            filterable placeholder="请选择节点组" size="small"
-            style="width: 100%"
-          >
-            <el-option 
-              v-for="item in nodeList"
-              :key="item.id" 
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+    <rule 
+      v-if="showRule" 
+      :selectedServiceId="selectedServiceId"
+      :serviceList = "serviceList"
+      :showRule.sync="showRule"
+    />
+    <div v-else>
+      <div class="app-container-search">
+        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" @submit.native.prevent>
+          <el-form-item label="项目名称" prop="project_id">
+            <el-select 
+              v-model="queryParams.project_id" 
+              filterable placeholder="请选择项目名称" size="small"
+              style="width: 240px"
+              @change="handleQuery"
+            >
+              <el-option 
+                v-for="item in projectList"
+                :key="item.id" 
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="服务名称" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入服务名称"
+              clearable
+              size="small"
+              style="width: 240px"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
       </div>
-    </el-dialog>
+      <div class="app-container-content">
+        <el-row :gutter="10" class="mb8">
+          <el-col :span="1.5">
+            <el-button
+              type="primary"
+              plain
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd"
+              v-hasPermi="['monitor:service:add']"
+            >新增</el-button>
+          </el-col>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        </el-row>
 
-    <!-- exporter -->
-    <el-drawer
-      :with-header="false"
-      :visible.sync="showExporter"
-      direction="rtl"
-      size="50%">
-      <exporter-drawer
-        :serviceId="serviceId"
-      />
-    </el-drawer>
+        <el-table v-loading="loading" :data="serviceList" 
+          border
+          :height="'calc(100vh - 326px)'"
+        >
+          <el-table-column label="服务编号" align="center" prop="id" width="80"/>
+          <el-table-column label="服务名称" align="left" prop="name" :show-overflow-tooltip="true" />
+          <el-table-column label="服务说明" align="left" prop="description" :show-overflow-tooltip="true" />
+          <el-table-column label="所属项目" align="left" prop="project_id" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <span>{{ transProjectName(scope.row.project_id) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="所属节点组" align="left" width="160" prop="farm_id" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <router-link :to="{ name: 'Host', params: { farm_id: scope.row.farm_id }}" class="link-type">
+                <span>{{ transNodeName(scope.row.farm_id) }}</span>
+              </router-link>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" width="180" class-name="operate">
+            <template slot-scope="scope">
+              <!-- <el-link
+                type="primary"
+                icon="el-icon-edit"
+                @click="handleUpdate(scope.row)"
+                v-hasPermi="['monitor:service:edit']"
+              >修改</el-link>
+              <el-link
+                type="danger"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['monitor:service:delete']"
+              >删除</el-link> -->
+              <el-link
+                type="primary"
+                icon="el-icon-link"
+                @click="handleBindExport(scope.row)"
+              >客户端</el-link>
+              <el-link
+                type="primary"
+                icon="el-icon-link"
+                @click="handleBindRule(scope.row)"
+              >规则</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="paginationParams.pageNum"
+          :limit.sync="paginationParams.pageSize"
+          @pagination="getList"
+        />
+      </div>
+
+      <!-- 添加或修改参数配置对话框 -->
+      <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+          <el-form-item label="项目名称" prop="project_id">
+            <el-select 
+              v-model="form.project_id" 
+              filterable placeholder="请选择项目名称" size="small"
+              style="width: 100%"
+            >
+              <el-option 
+                v-for="item in projectList"
+                :key="item.id" 
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="服务名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入服务名称" />
+          </el-form-item>
+          <el-form-item label="服务说明" prop="description">
+            <el-input 
+              v-model="form.description"
+              type="textarea"
+              :autosize="{ minRows: 2}" 
+              placeholder="请输入服务说明" />
+          </el-form-item>
+          <el-form-item label="节点组" prop="farm_id">
+            <el-select 
+              v-model="form.farm_id" 
+              filterable placeholder="请选择节点组" size="small"
+              style="width: 100%"
+            >
+              <el-option 
+                v-for="item in nodeList"
+                :key="item.id" 
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
+
+      <!-- exporter -->
+      <el-drawer
+        :with-header="false"
+        :visible.sync="showExporter"
+        direction="rtl"
+        size="50%">
+        <exporter-drawer
+          :serviceId="serviceId"
+        />
+      </el-drawer>
+    </div>
+
   </div>
 </template>
 
@@ -171,11 +178,14 @@ import { listService, delService, addService, updateService} from "@/api/monitor
 import { listProject} from "@/api/monitor/project";
 import { listNode} from "@/api/monitor/node";
 import ExporterDrawer from "./components/exporterDrawer.vue"
+import Rule from './components/rule/index.vue';
+
 export default {
   name: "Service",
-  components: { ExporterDrawer},
+  components: { ExporterDrawer,Rule},
   data() {
     return {
+      showRule: false,
       showExporter:false,
       serviceId: undefined,
       //operateNum 0: 无, 1: 新增，2: 修改
@@ -186,6 +196,7 @@ export default {
       loading: true,
       // 选中数组
       items: [],
+      selectedServiceId: undefined,
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -395,7 +406,8 @@ export default {
       this.showExporter = true;
     },
     handleBindRule(row){
-
+      this.showRule = true;
+      this.selectedServiceId = row.id;
     }
   }
 };
