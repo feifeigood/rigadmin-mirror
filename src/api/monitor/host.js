@@ -17,6 +17,13 @@ export function listHostByFarm(query) {
   })
 }
 
+export function getHostsByAppledExporter(id) {
+  return request({
+    url: `/api/v1/defaultexporters/${id}/hosts`,
+    method: 'get',
+  })
+}
+
 // 查询host详情
 export function getHost(id) {
   return request({
@@ -43,7 +50,7 @@ export function updateHost(data) {
   })
 }
 //删除host
-export function delHost(id){
+export function delHost(id) {
   return request({
     url: `/api/v1/hosts/${id}`,
     method: 'delete',

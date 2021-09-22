@@ -8,6 +8,7 @@ export function listDefaultExporter(query) {
     params: query
   })
 }
+
 //查询exporter数目
 export function getExporterNumber(id) {
   return request({
@@ -15,6 +16,7 @@ export function getExporterNumber(id) {
     method: 'get',
   })
 }
+
 // 新增Defaultexporter
 export function addDefaultExporter(data) {
   return request({
@@ -32,8 +34,9 @@ export function updateDefaultExporter(data) {
     data: data
   })
 }
+
 //删除Defaultexporter
-export function delDefaultExporter(id){
+export function delDefaultExporter(id) {
   return request({
     url: `/api/v1/defaultexporters/${id}`,
     method: 'delete',
@@ -59,7 +62,7 @@ export function updateExporter(data) {
 }
 
 //删除exporter
-export function delExporter(id){
+export function delExporter(id) {
   return request({
     url: `/api/v1/exporters/${id}`,
     method: 'delete',
