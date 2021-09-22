@@ -203,4 +203,15 @@ alertpager.interceptors.response.use(res => {
 )
 
 
-export { service as default, alertpager }
+// metricserver
+const metricserver = axios.create({
+  baseURL: process.env.VUE_APP_METRICS_API,
+  timeout: 10000
+})
+
+metricserver.interceptors.response.use(res => {
+  console.log(res);
+  return res.data
+})
+
+export { service as default, alertpager, metricserver }

@@ -40,11 +40,18 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
-      [process.env.VUE_APP_ALERTPAGER_API]:{
+      [process.env.VUE_APP_ALERTPAGER_API]: {
         target: `http://alertpager.monitoring.ecn.zenlayer.net`,
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_ALERTPAGER_API]: ''
+        }
+      },
+      [process.env.VUE_APP_METRICS_API]: {
+        target: `http://128.1.84.78:9090`,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_METRICS_API]: ''
         }
       }
     },
@@ -87,7 +94,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()
@@ -117,8 +124,8 @@ module.exports = {
             })
           config.optimization.runtimeChunk('single'),
           {
-             from: path.resolve(__dirname, './public/robots.txt'), //防爬虫文件
-             to: './', //到根目录下
+            from: path.resolve(__dirname, './public/robots.txt'), //防爬虫文件
+            to: './', //到根目录下
           }
         }
       )
