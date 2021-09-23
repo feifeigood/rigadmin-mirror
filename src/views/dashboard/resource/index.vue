@@ -3,18 +3,14 @@
     <div class="title-container">
       <div class="title">监管资源</div>
       <div class="search">
-        <el-form :model="queryParams" ref="queryForm" @submit.native.prevent>
-          <el-form-item prop="name">
-            <el-input
-              v-model="queryParams.name"
-              placeholder="自定义名/主机/ip"
-              clearable
-              size="small"
-              style="width: 280px"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-        </el-form>
+        <el-input
+          v-model="searchParams"
+          placeholder="自定义名/主机/ip"
+          clearable
+          size="small"
+          style="width: 280px"
+          @keyup.enter.native="handleQuery"
+        />
       </div>
     </div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -24,7 +20,9 @@
         :label="item.alias"
         :name="item.logo"
       >
-        <component :is="`${item.logo}-tab`"></component>
+        <component :is="`${item.logo}-tab`"
+          :queryParams="queryParams"
+        ></component>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -52,17 +50,18 @@ export default {
     return {
       activeName: undefined,
       // 查询参数
-      queryParams: {
-        name: undefined,
-      },
-    };
+      searchParams: undefined,
+      queryParams: "",
+    }
   },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
     },
     /** 搜索按钮操作 */
-    handleQuery() {},
+    handleQuery() {
+      this.queryParams = this.searchParams;
+    },
   },
   watch: {
     panelList() {
