@@ -72,8 +72,8 @@ export default {
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
-        username: "admin",
-        password: "rigserver",
+        username: undefined,
+        password: undefined,
         rememberMe: false,
       },
       loginRules: {
