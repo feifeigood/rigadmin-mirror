@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD:src/views/dashboard/resource/hostTab.vue
   <el-table style="width: 100%" v-loading="loading" :data="tableData">
     <el-table-column
       prop="hostname"
@@ -21,6 +22,9 @@
     <el-table-column prop="memUsage" label="内存使用率(%)" sortable>
     </el-table-column>
   </el-table>
+=======
+  <div>linux-tab</div>
+>>>>>>> 6d2ddc1e02361f762cbb7d029a02f49ab90f2fb5:src/views/dashboard/resource/linuxTab.vue
 </template>
 
 <script>
@@ -38,6 +42,7 @@ import {
 } from "@/api/monitor/stats";
 
 export default {
+<<<<<<< HEAD:src/views/dashboard/resource/hostTab.vue
   name: "HostTab",
   data() {
     return {
@@ -101,6 +106,11 @@ export default {
                   data["uptime"] = parseInt(item?.value[1]);
                   hosts[item?.metric?.instance] = data;
                 });
+=======
+  name:'LinuxTab'
+}
+</script>
+>>>>>>> 6d2ddc1e02361f762cbb7d029a02f49ab90f2fb5:src/views/dashboard/resource/linuxTab.vue
 
                 results[2]?.data?.result.map((item) => {
                   let data = hosts[item?.metric?.instance];

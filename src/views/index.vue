@@ -9,7 +9,7 @@
       @handlePanelClick="handlePanelClick" 
     />
     <rank />
-    <resource />
+    <resource :panelList="panelList"/>
   </div>
 </template>
 
@@ -47,6 +47,7 @@ export default {
               num: resArr[idx]?.length || 0
             }
           }).filter(item=> item.visible == 1)
+          console.log(this.panelList)
           this.loading = false;
         })
       }
