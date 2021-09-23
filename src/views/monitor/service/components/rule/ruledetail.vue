@@ -99,14 +99,19 @@ export default {
       this.$emit('update:operateNum', 0);
     },
     transResponse(response){
-      return {
-        ...response,
-        description: response.description || response.sample.description,
-        comparator: response.comparator || response.sample.comparator,
-        default_value: response.sample_def_val || response.sample.default_value,
-        labels: response.labels || response.sample.labels,
-        annotations: response.annotations || response.sample.annotations,
+      if (!!response.sample_id) {
+        return {
+          ...response,
+          description: response.description || response.sample.description,
+          comparator: response.comparator || response.sample.comparator,
+          default_value: response.sample_def_val || response.sample.default_value,
+          labels: response.labels || response.sample.labels,
+          annotations: response.annotations || response.sample.annotations,
+        }
+      }else{
+        return response;
       }
+
     }
   }
 }

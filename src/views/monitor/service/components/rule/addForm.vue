@@ -4,6 +4,17 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row v-if="operateNum == 1">
           <el-col :span="24">
+            <el-form-item label="规则类型">
+              <el-radio-group v-model="ruleType" @change="handleRuleTypeChange">
+                <el-radio :label="1">模版</el-radio>
+                <el-radio :label="2">自定义</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row v-if="operateNum == 1 && ruleType == 1">
+          <el-col :span="24">
             <el-form-item label="客户端">
               <el-select 
                 :value="selectedExporterId" 
@@ -22,7 +33,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="operateNum == 1">
+        <el-row v-if="operateNum == 1 && ruleType == 1">
           <el-col :span="24">
             <el-form-item label="模版规则" prop="sample_id">
               <el-select 
@@ -45,7 +56,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="规则名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入规则名称" disabled/>
+              <el-input v-model="form.name" placeholder="请输入规则名称" :disabled="ruleType == 1"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -62,12 +73,12 @@
                 :autosize="{ minRows: 2}"
                 v-model="form.clause" 
                 placeholder="请输入表达式" 
-                disabled
+                :disabled="ruleType == 1"
               />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="ruleType == 1">
           <el-col :span="12">
             <el-form-item label="对比符" prop="comparator">
               <el-select 
@@ -99,7 +110,7 @@
                 placeholder="请输入规则描述" 
                 type="textarea"
                 :autosize="{ minRows: 3}"
-                disabled
+                :disabled="ruleType == 1"
               />
             </el-form-item>
           </el-col>
@@ -123,7 +134,7 @@
                       :style="{width: '120px'}"
                       v-model="item.key" 
                       placeholder="请输入key" 
-                      disabled
+                      :disabled="ruleType == 1 || item.key =='severity'"
                     />
                   </el-form-item>
                   <el-form-item 
@@ -133,14 +144,14 @@
                     }]"
                   >
                     <el-input 
-                      :style="{width: '520px'}"
+                      :style="{width: ruleType == 1? '520px' : '480px'}"
                       v-model="item.value" 
                       placeholder="请输入value" 
-                      :disabled="item.key != 'severity'"
+                      :disabled="item.key != 'severity' && ruleType == 1"
                     />
                   </el-form-item>
                   <i class="el-icon-close" 
-                    v-if="form.labels.length == -1"
+                    v-if="form.labels.length > 1 && ruleType != 1 && item.key !=='severity'"
                     @click="handleDelLabel(index)"
                   ></i>
                 </div>
@@ -148,7 +159,7 @@
                 <a
                   class="addWrap"
                   @click="handleAddLabel"
-                  v-if="false"
+                  v-if="ruleType != 1"
                 >
                   <i class="el-icon-plus"></i>
                   <span>增加标签</span>
@@ -176,7 +187,7 @@
                       :style="{width: '120px'}"
                       v-model="item.key" 
                       placeholder="请输入key" 
-                      disabled
+                      :disabled="ruleType == 1"
                     />
                   </el-form-item>
                   <el-form-item 
@@ -186,14 +197,14 @@
                     }]"
                   >
                     <el-input 
-                      :style="{width: '520px'}"
+                      :style="{width: ruleType == 1? '520px' : '480px'}"
                       v-model="item.value" 
                       placeholder="请输入value"
-                      disabled 
+                      :disabled="ruleType == 1"
                     />
                   </el-form-item>
                   <i class="el-icon-close" 
-                    v-if="form.annotations.length == -1"
+                    v-if="form.annotations.length > 1 && ruleType != 1"
                     @click="handleDelAnnotation(index)"
                   ></i>
                 </div>
@@ -201,7 +212,7 @@
                 <a
                   class="addWrap"
                   @click="handleAddAnnotation"
-                  v-if="false"
+                  v-if="ruleType != 1"
                 >
                   <i class="el-icon-plus"></i>
                   <span>增加注解</span>
@@ -242,6 +253,7 @@ export default {
       submitLoading: false,
       title: undefined,
       open: false,
+      ruleType: 1,
       form:{},
       rules:{
         sample_id:[
@@ -313,15 +325,24 @@ export default {
       });
     },
     transRuleResponse(response){
-      return {
-        ...response,
-        clause: response.sample.clause,
-        description: response.description || response.sample.description,
-        comparator: response.comparator || response.sample.comparator,
-        def_val: response.sample_def_val || response.sample.default_value,
-        labels: response.labels || response.sample.labels,
-        annotations: response.annotations || response.sample.annotations,
+      if (!!response.sample_id) {
+        this.ruleType = 1;
+        return {
+          ...response,
+          clause: response.sample.clause,
+          description: response.description || response.sample.description,
+          comparator: response.comparator || response.sample.comparator,
+          def_val: response.sample_def_val || response.sample.default_value,
+          labels: response.labels || response.sample.labels,
+          annotations: response.annotations || response.sample.annotations,
+        }
+      }else{
+        this.ruleType = 2;
+        return{
+          ...response,
+        }
       }
+
     },
     tranObjToArr(obj){
       if (!obj) {
@@ -358,7 +379,7 @@ export default {
         comparator: undefined,
         def_val:undefined,
         labels:[{
-          key: undefined,
+          key: 'severity',
           value: undefined
         }],
         annotations:[{
@@ -467,11 +488,14 @@ export default {
         this.form.annotations = this.tranObjToArr(response.annotations);
       })
     },
+    handleRuleTypeChange(){
+      this.reset();
+    },
     validateLabelKey(index){
       const labelList = [...this.form.labels];
       labelList.splice(index,1);
       return (rule, value, callback)=>{
-        if (labelList.some(item => item.key.trim() == value.trim())) {
+        if (labelList.some(item => item.key?.trim() == value?.trim())) {
           callback(new Error('key值不能重复'));
         }
         callback()
@@ -481,7 +505,7 @@ export default {
       const list = [...this.form.annotations];
       list.splice(index,1);
       return (rule, value, callback)=>{
-        if (list.some(item => item.key.trim() == value.trim())) {
+        if (list.some(item => item.key?.trim() == value?.trim())) {
           callback(new Error('key值不能重复'));
         }
         callback()

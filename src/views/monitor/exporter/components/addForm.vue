@@ -384,7 +384,7 @@ export default {
       const labelList = [...this.form.labels];
       labelList.splice(index,1);
       return (rule, value, callback)=>{
-        if (labelList.some(item => item.key.trim() == value.trim())) {
+        if (labelList.some(item => item.key?.trim() == value?.trim())) {
           callback(new Error('key值不能重复'));
         }
         callback()
@@ -394,7 +394,7 @@ export default {
       const list = [...this.form.annotations];
       list.splice(index,1);
       return (rule, value, callback)=>{
-        if (list.some(item => item.key.trim() == value.trim())) {
+        if (list.some(item => item.key?.trim() == value?.trim())) {
           callback(new Error('key值不能重复'));
         }
         callback()

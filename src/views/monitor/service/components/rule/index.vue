@@ -13,7 +13,7 @@
             <el-option 
               v-for="item in serviceList"
               :key="item.id" 
-              :label="item.name"
+              :label="`${item.name}-${item.project.name}`"
               :value="item.id">
             </el-option>
           </el-select>
@@ -263,13 +263,24 @@ export default {
       this.$emit('update:showRule', false);
     },
     transResponse(response){
-      return response?.map(item => ({
-        ...item,
-        description: item.description || item.sample.description,
-        comparator: item.comparator || item.sample.comparator,
-        default_value: item.sample_def_val || item.sample.default_value,
-        severity: item.labels.severity || item.sample.labels.severity,
-      })) || []
+      return response?.map(item => {
+        if (!!item.sample_id) {
+          return {
+            ...item,
+            description: item.description || item.sample.description,
+            comparator: item.comparator || item.sample.comparator,
+            default_value: item.sample_def_val || item.sample.default_value,
+            severity: item.labels.severity || item.sample.labels.severity,
+          }
+        }else{
+          return {
+            ...item,
+            severity: item.labels?.severity
+          };
+          
+        }
+
+      }) || []
     }
 
   }
