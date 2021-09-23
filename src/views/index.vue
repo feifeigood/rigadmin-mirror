@@ -40,14 +40,14 @@ export default {
     this.loading = true;
     listDefaultExporter().then(response => {
       if (response?.length > 0) {
-        Promise.all(response.filter(item=> item.visible == 1).map(item=> getExporterNumber(item.id))).then(resArr => {
-          this.panelList = response.map((item, idx) => {
+        const res = response.filter(item=> item.visible == 1);
+        Promise.all(res.map(item=> getExporterNumber(item.id))).then(resArr => {
+          this.panelList = res.map((item, idx) => {
             return{
               ...item,
               num: resArr[idx]?.length || 0
             }
           })
-          console.log(this.panelList)
           this.loading = false;
         })
       }
