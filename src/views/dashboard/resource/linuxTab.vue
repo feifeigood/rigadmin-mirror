@@ -70,6 +70,8 @@ export default {
   },
   watch:{
     queryParams(val){
+      this.paginationParams.pageNum= 1;
+      this.paginationParams.pageSize = 10;
       this.getTablePaginationData();
     },
     tableData(val){
@@ -110,7 +112,18 @@ export default {
       let qInstance = instances.join("|");
       let hosts = {};
       instances.map((instance) => {
-        hosts[instance] = {};
+        hosts[instance] = {
+          instance: instance.split(":")[0],
+          hostname: '-',
+          kernalVersion: '-',
+          uptime: '-',
+          mem: '-',
+          cpuNum: '-',
+          swap: '-',
+          pids: '-',
+          cpuUsage: '-',
+          memUsage:'-'
+        };
       });
       Promise.all([
         nodeUname(qInstance),
