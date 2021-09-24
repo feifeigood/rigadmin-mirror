@@ -1,5 +1,5 @@
 {
-  "name": "ruoyi",
+  "name": "rigadmin",
   "version": "3.4.0",
   "description": "监控管理系统",
   "author": "admin",
@@ -33,7 +33,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/y_project/RuoYi-Vue.git"
+    "url": "http://gitlab.zenlayer.net/gia/rigadmin.git"
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.4.0",
