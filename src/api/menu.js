@@ -106,15 +106,15 @@ export const getRouters = () => {
                         ]
                     },
                     {
-                        "name": "Monitor",
-                        "path": "/monitor",
+                        "name": "Architecture",
+                        "path": "/architecture",
                         "hidden": false,
                         "redirect": "noRedirect",
                         "component": "Layout",
                         "alwaysShow": true,
                         "meta": {
-                            "title": "监控管理",
-                            "icon": "monitor",
+                            "title": "基础数据",
+                            "icon": "architecture",
                             "noCache": false,
                             "link": null
                         },
