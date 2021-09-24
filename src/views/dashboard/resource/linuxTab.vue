@@ -27,6 +27,7 @@
       :total="total"
       :page.sync="paginationParams.pageNum"
       :limit.sync="paginationParams.pageSize"
+      :autoScroll="false"
       @pagination="getTablePaginationData"
     />
   </div>
