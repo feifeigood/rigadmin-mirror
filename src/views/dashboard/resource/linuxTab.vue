@@ -56,6 +56,7 @@ export default {
   },
   data() {
     return {
+      port: undefined,
       tableData: [],
       tablePaginationData:[],
       loading: true,
@@ -77,7 +78,7 @@ export default {
         this.paginationParams.pageSize;
       const end = start + this.paginationParams.pageSize;
       this.total = val?.length;
-      this.tablePaginationData = val.slice(start, end)
+      this.sendRequest(val.slice(start, end));
     }
 
   },
@@ -90,116 +91,110 @@ export default {
       this.loading = true;
       listDefaultExporter({ job: "node" }).then((results) => {
         if (results?.length > 0) {
-          let port = results[0].port;
+          this.port = results[0].port;
           getHostsByAppledExporter(results[0].id).then((results) => {
             if (results?.length > 0) {
               this.total = results?.length;
-              // const start =
-              //   (this.paginationParams.pageNum - 1) *
-              //   this.paginationParams.pageSize;
-              // const end = start + this.paginationParams.pageSize;
-
-              let instances = [];
-              results.map((item) => {
-                instances.push(item.name + ":" + port);
-              });
-
-              let qInstance = instances.join("|");
-              let hosts = {};
-              instances.map((instance) => {
-                hosts[instance] = {};
-              });
-              Promise.all([
-                nodeUname(qInstance),
-                nodeBootTime(qInstance),
-                nodeMem(qInstance),
-                nodeCPUNum(qInstance),
-                nodeSwap(qInstance),
-                nodePids(qInstance),
-                nodeCPUUsage(qInstance),
-                nodeMemUsage(qInstance),
-              ]).then((results) => {
-                results[0]?.data?.result.map((item) => {
-                  let data = hosts[item?.metric?.instance];
-                  data["hostname"] = item?.metric?.nodename;
-                  data["instance"] = item?.metric?.instance.split(":")[0];
-                  data["kernalVersion"] = item?.metric?.release;
-                  hosts[item?.metric?.instance] = data;
-                });
-
-                results[1]?.data?.result.map((item) => {
-                  let data = hosts[item?.metric?.instance];
-                  data["uptime"] = parseInt(item?.value[1]);
-                  hosts[item?.metric?.instance] = data;
-                });
-
-                results[2]?.data?.result.map((item) => {
-                  let data = hosts[item?.metric?.instance];
-                  data["mem"] = (
-                    parseInt(item?.value[1]) /
-                    1024 /
-                    1024
-                  ).toFixed(2);
-                  hosts[item?.metric?.instance] = data;
-                });
-
-                results[3]?.data?.result.map((item) => {
-                  let data = hosts[item?.metric?.instance];
-                  data["cpuNum"] = parseInt(item?.value[1]);
-                  hosts[item?.metric?.instance] = data;
-                });
-
-                results[4]?.data?.result.map((item) => {
-                  let data = hosts[item?.metric?.instance];
-                  data["swap"] = (
-                    parseInt(item?.value[1]) /
-                    1024 /
-                    1024
-                  ).toFixed(2);
-                  hosts[item?.metric?.instance] = data;
-                });
-
-                results[5]?.data?.result.map((item) => {
-                  let data = hosts[item?.metric?.instance];
-                  data["pids"] = parseInt(item?.value[1]);
-                  hosts[item?.metric?.instance] = data;
-                });
-
-                results[6]?.data?.result.map((item) => {
-                  let data = hosts[item?.metric?.instance];
-                  data["cpuUsage"] = parseFloat(item?.value[1]).toFixed(2);
-                  hosts[item?.metric?.instance] = data;
-                });
-
-                results[7]?.data?.result.map((item) => {
-                  let data = hosts[item?.metric?.instance];
-                  data["memUsage"] = parseFloat(item?.value[1]).toFixed(2);
-                  hosts[item?.metric?.instance] = data;
-                });
-
-                this.tableData = Object.values(hosts);
-                this.loading = false;
-              });
+              this.tableData = results;
             }
           });
         }
       });
     },
+    sendRequest(results){
+      let instances = [];
+      results.map((item) => {
+        instances.push(item.name + ":" + this.port);
+      });
+
+      let qInstance = instances.join("|");
+      let hosts = {};
+      instances.map((instance) => {
+        hosts[instance] = {};
+      });
+      Promise.all([
+        nodeUname(qInstance),
+        nodeBootTime(qInstance),
+        nodeMem(qInstance),
+        nodeCPUNum(qInstance),
+        nodeSwap(qInstance),
+        nodePids(qInstance),
+        nodeCPUUsage(qInstance),
+        nodeMemUsage(qInstance),
+      ]).then((results) => {
+        results[0]?.data?.result.map((item) => {
+          let data = hosts[item?.metric?.instance];
+          data["hostname"] = item?.metric?.nodename;
+          data["instance"] = item?.metric?.instance.split(":")[0];
+          data["kernalVersion"] = item?.metric?.release;
+          hosts[item?.metric?.instance] = data;
+        });
+
+        results[1]?.data?.result.map((item) => {
+          let data = hosts[item?.metric?.instance];
+          data["uptime"] = parseInt(item?.value[1]);
+          hosts[item?.metric?.instance] = data;
+        });
+
+        results[2]?.data?.result.map((item) => {
+          let data = hosts[item?.metric?.instance];
+          data["mem"] = (
+            parseInt(item?.value[1]) /
+            1024 /
+            1024
+          ).toFixed(2);
+          hosts[item?.metric?.instance] = data;
+        });
+
+        results[3]?.data?.result.map((item) => {
+          let data = hosts[item?.metric?.instance];
+          data["cpuNum"] = parseInt(item?.value[1]);
+          hosts[item?.metric?.instance] = data;
+        });
+
+        results[4]?.data?.result.map((item) => {
+          let data = hosts[item?.metric?.instance];
+          data["swap"] = (
+            parseInt(item?.value[1]) /
+            1024 /
+            1024
+          ).toFixed(2);
+          hosts[item?.metric?.instance] = data;
+        });
+
+        results[5]?.data?.result.map((item) => {
+          let data = hosts[item?.metric?.instance];
+          data["pids"] = parseInt(item?.value[1]);
+          hosts[item?.metric?.instance] = data;
+        });
+
+        results[6]?.data?.result.map((item) => {
+          let data = hosts[item?.metric?.instance];
+          data["cpuUsage"] = parseFloat(item?.value[1]).toFixed(2);
+          hosts[item?.metric?.instance] = data;
+        });
+
+        results[7]?.data?.result.map((item) => {
+          let data = hosts[item?.metric?.instance];
+          data["memUsage"] = parseFloat(item?.value[1]).toFixed(2);
+          hosts[item?.metric?.instance] = data;
+        });
+
+        this.tablePaginationData = Object.values(hosts);
+        this.loading = false;
+      });
+    },
     getTablePaginationData(){
       this.loading = true;
-      setTimeout(() => {
-        const resTemp = this.tableData.filter(item => {
-          return item.hostname.includes(this.queryParams) || item.instance.includes(this.queryParams)
-        })
-        const start =
-          (this.paginationParams.pageNum - 1) *
-          this.paginationParams.pageSize;
-        const end = start + this.paginationParams.pageSize;
-        this.total = resTemp?.length;
-        this.tablePaginationData = resTemp.slice(start, end)
-        this.loading = false;
-      }, 1000);
-
+      const resTemp = this.tableData.filter(item => {
+        return item.name.includes(this.queryParams) 
+      })
+      const start =
+        (this.paginationParams.pageNum - 1) *
+        this.paginationParams.pageSize;
+      const end = start + this.paginationParams.pageSize;
+      this.total = resTemp?.length;
+      this.sendRequest(resTemp.slice(start, end));
     }
   },
 };
