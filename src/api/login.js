@@ -21,21 +21,17 @@ export function getInfo() {
         "msg": "操作成功",
         "code": 200,
         "permissions": [
-            "*:*:*"
+          "*:*:*"
         ],
         "roles": [
-            "admin"
+          "admin"
         ],
         "user": {
-            "userName": "admin",
-            "avatar": "",
+          "userName": "admin",
+          "avatar": "",
         }
-    }
+      }
     )
-  })
-  return request({
-    url: '/getInfo',
-    method: 'get'
   })
 }
 

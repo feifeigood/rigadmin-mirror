@@ -8,103 +8,103 @@ export const getRouters = () => {
                 "msg": "操作成功",
                 "code": 200,
                 "data": [
-                    {
-                        "path": "/alertpager",
-                        "component": "Layout",
-                        "redirect": 'alertpager',
-                        "children": [
-                            {
-                                "name": "Alertpager",
-                                "path": "",
-                                "hidden": false,
-                                "component": "monitor/alertpager/index",
-                                "meta": {
-                                    "title": "监控告警",
-                                    "icon": "alert",
-                                    "noCache": true,
-                                    "link": null
-                                },
-                            },
-                        ]
-                    },
-                    {
-                        "path": "/server",
-                        "component": "Layout",
-                        "redirect": 'server',
-                        "children": [
-                            {
-                                "name": "Server",
-                                "path": "",
-                                "hidden": false,
-                                "component": "monitor/alertpager/index",
-                                "meta": {
-                                    "title": "主机管理",
-                                    "icon": "server",
-                                    "noCache": true,
-                                    "link": null
-                                },
-                            },
-                        ]
-                    },
-                    {
-                        "name": "Database",
-                        "path": "/database",
-                        "hidden": false,
-                        "redirect": "noRedirect",
-                        "component": "Layout",
-                        "alwaysShow": true,
-                        "meta": {
-                            "title": "数据库管理",
-                            "icon": "database",
-                            "noCache": false,
-                            "link": null
-                        },
-                        "children": [
-                            {
-                                "name": "MySQL",
-                                "path": "mysql",
-                                "hidden": false,
-                                "component": "monitor/exporter/index",
-                                "meta": {
-                                    "title": "MySQL",
-                                    "icon": "mysql-m",
-                                    "noCache": true,
-                                    "link": null
-                                }
-                            },
-                            {
-                                "name": "Oracle",
-                                "path": "oracle",
-                                "hidden": false,
-                                "component": "monitor/project/index",
-                                "meta": {
-                                    "title": "Oracle",
-                                    "icon": "oracle-m",
-                                    "noCache": true,
-                                    "link": null
-                                }
-                            },
-                        ]
-                    },
-                    {
-                        "path": "/middleware",
-                        "component": "Layout",
-                        "redirect": 'middleware',
-                        "children": [
-                            {
-                                "name": "Middleware",
-                                "path": "",
-                                "hidden": false,
-                                "component": "monitor/alertpager/index",
-                                "meta": {
-                                    "title": "中间件管理",
-                                    "icon": "middleware",
-                                    "noCache": true,
-                                    "link": null
-                                },
-                            },
-                        ]
-                    },
+                    // {
+                    //     "path": "/alertpager",
+                    //     "component": "Layout",
+                    //     "redirect": 'alertpager',
+                    //     "children": [
+                    //         {
+                    //             "name": "Alertpager",
+                    //             "path": "",
+                    //             "hidden": false,
+                    //             "component": "monitor/alertpager/index",
+                    //             "meta": {
+                    //                 "title": "监控告警",
+                    //                 "icon": "alert",
+                    //                 "noCache": true,
+                    //                 "link": null
+                    //             },
+                    //         },
+                    //     ]
+                    // },
+                    // {
+                    //     "path": "/server",
+                    //     "component": "Layout",
+                    //     "redirect": 'server',
+                    //     "children": [
+                    //         {
+                    //             "name": "Server",
+                    //             "path": "",
+                    //             "hidden": false,
+                    //             "component": "monitor/alertpager/index",
+                    //             "meta": {
+                    //                 "title": "主机管理",
+                    //                 "icon": "server",
+                    //                 "noCache": true,
+                    //                 "link": null
+                    //             },
+                    //         },
+                    //     ]
+                    // },
+                    // {
+                    //     "name": "Database",
+                    //     "path": "/database",
+                    //     "hidden": false,
+                    //     "redirect": "noRedirect",
+                    //     "component": "Layout",
+                    //     "alwaysShow": true,
+                    //     "meta": {
+                    //         "title": "数据库管理",
+                    //         "icon": "database",
+                    //         "noCache": false,
+                    //         "link": null
+                    //     },
+                    //     "children": [
+                    //         {
+                    //             "name": "MySQL",
+                    //             "path": "mysql",
+                    //             "hidden": false,
+                    //             "component": "monitor/exporter/index",
+                    //             "meta": {
+                    //                 "title": "MySQL",
+                    //                 "icon": "mysql-m",
+                    //                 "noCache": true,
+                    //                 "link": null
+                    //             }
+                    //         },
+                    //         {
+                    //             "name": "Oracle",
+                    //             "path": "oracle",
+                    //             "hidden": false,
+                    //             "component": "monitor/project/index",
+                    //             "meta": {
+                    //                 "title": "Oracle",
+                    //                 "icon": "oracle-m",
+                    //                 "noCache": true,
+                    //                 "link": null
+                    //             }
+                    //         },
+                    //     ]
+                    // },
+                    // {
+                    //     "path": "/middleware",
+                    //     "component": "Layout",
+                    //     "redirect": 'middleware',
+                    //     "children": [
+                    //         {
+                    //             "name": "Middleware",
+                    //             "path": "",
+                    //             "hidden": false,
+                    //             "component": "monitor/alertpager/index",
+                    //             "meta": {
+                    //                 "title": "中间件管理",
+                    //                 "icon": "middleware",
+                    //                 "noCache": true,
+                    //                 "link": null
+                    //             },
+                    //         },
+                    //     ]
+                    // },
                     {
                         "name": "Architecture",
                         "path": "/architecture",
