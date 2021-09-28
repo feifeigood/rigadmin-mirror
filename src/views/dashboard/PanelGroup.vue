@@ -1,17 +1,28 @@
 <template>
   <el-row :gutter="18" class="panel-group">
-    <el-col :span="6" class="card-panel-col"
-      v-for="item in panelList" :key="item.id"
+    <el-col
+      :span="6"
+      class="card-panel-col"
+      v-for="item in panelList"
+      :key="item.id"
     >
       <div class="card-panel" @click="handlePanelClick(item.id)">
         <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon :icon-class="`${item.logo}_icon`" class-name="card-panel-icon" />
+          <svg-icon
+            :icon-class="`${item.logo}_icon`"
+            class-name="card-panel-icon"
+          />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            {{item.alias}}
+            {{ item.alias }}
           </div>
-          <count-to :start-val="0" :end-val="item.num" :duration="1600" class="card-panel-num" />
+          <count-to
+            :start-val="0"
+            :end-val="item.num"
+            :duration="1600"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -21,10 +32,13 @@
           <svg-icon icon-class="alter" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
-            报警数
-          </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <div class="card-panel-text">报警数</div>
+          <count-to
+            :start-val="0"
+            :end-val="0"
+            :duration="3600"
+            class="card-panel-num"
+          />
         </div>
       </div>
     </el-col>
@@ -32,13 +46,13 @@
 </template>
 
 <script>
-import CountTo from 'vue-count-to'
+import CountTo from "vue-count-to";
 
 export default {
   components: {
-    CountTo
+    CountTo,
   },
-  props:{
+  props: {
     panelList: {
       type: Array,
       default: [],
@@ -46,10 +60,10 @@ export default {
   },
   methods: {
     handlePanelClick(type) {
-      this.$emit('handlePanelClick', type)
-    }
+      this.$emit("handlePanelClick", type);
+    },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -71,8 +85,8 @@ export default {
     overflow: hidden;
     color: #666;
     background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.05);
     border-radius: 16px;
 
     &:hover {
@@ -80,7 +94,6 @@ export default {
         font-size: 52px;
       }
     }
-
 
     .card-panel-icon-wrapper {
       float: left;
@@ -115,7 +128,7 @@ export default {
   }
 }
 
-@media (max-width:550px) {
+@media (max-width: 550px) {
   .card-panel-description {
     display: none;
   }
