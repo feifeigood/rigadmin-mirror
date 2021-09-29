@@ -1,0 +1,19 @@
+<template>
+  <div class="chart-container">
+    <iframe
+      id="m_Iframe"
+      src="http://10.8.3.100:3000/d/v2lB7uH7z/zhu-ji-jian-kong?orgId=1&refresh=1m&kiosk=full"
+      width="100%"
+      height="100%"
+      frameborder="0"
+    ></iframe>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.view-mode--kiosk .sidemenu,
+.view-mode--kiosk .submenu-controls,
+.view-mode--tv .submenu-controls {
+  display: "block";
+}
+</style>

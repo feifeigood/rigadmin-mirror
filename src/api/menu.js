@@ -8,6 +8,54 @@ export const getRouters = () => {
                 "msg": "操作成功",
                 "code": 200,
                 "data": [
+                    {
+                        "path": "/extviews",
+                        "component": "Layout",
+                        "hidden": false,
+                        "redirect": "noRedirect",
+                        "alwaysShow": true,
+                        "meta": {
+                            "title": "监控看图",
+                            "icon": "linechart",
+                            "noCache": false,
+                            "link": null
+                        },
+                        "children": [
+                            {
+                                "name": "Node",
+                                "path": "node",
+                                "hidden": false,
+                                "component": "ext/node/index",
+                                "meta": {
+                                    "title": "主机指标",
+                                    "noCache": true,
+                                    "link": null
+                                }
+                            },
+                            {
+                                "name": "switch",
+                                "path": "switch",
+                                "hidden": false,
+                                "component": "ext/switch/index",
+                                "meta": {
+                                    "title": "交换机指标",
+                                    "noCache": true,
+                                    "link": null
+                                }
+                            },
+                            {
+                                "name": "mysql",
+                                "path": "mysql",
+                                "hidden": false,
+                                "component": "ext/mysql/index",
+                                "meta": {
+                                    "title": "MySQL指标",
+                                    "noCache": true,
+                                    "link": null
+                                }
+                            },
+                        ]
+                    },
                     // {
                     //     "path": "/alertpager",
                     //     "component": "Layout",
