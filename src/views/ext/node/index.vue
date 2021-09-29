@@ -10,10 +10,8 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-.view-mode--kiosk .sidemenu,
-.view-mode--kiosk .submenu-controls,
-.view-mode--tv .submenu-controls {
-  display: "block";
+<style scoped lang="scss">
+.app-container {
+  height: calc(100vh - 85px);
 }
 </style>
