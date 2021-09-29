@@ -33,7 +33,7 @@ export const getRouters = () => {
                                 }
                             },
                             {
-                                "name": "switch",
+                                "name": "Switch",
                                 "path": "switch",
                                 "hidden": false,
                                 "component": "ext/switch/index",
@@ -44,7 +44,7 @@ export const getRouters = () => {
                                 }
                             },
                             {
-                                "name": "mysql",
+                                "name": "MySQL",
                                 "path": "mysql",
                                 "hidden": false,
                                 "component": "ext/mysql/index",
