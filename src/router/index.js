@@ -5,7 +5,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-import ParentView from '@/components/ParentView';
 
 /**
  * Note: 路由配置项
@@ -38,36 +37,19 @@ export const constantRoutes = [
         component: (resolve) => require(['@/views/redirect'], resolve)
       }
     ]
-  },
-  {
-    path: '/login',
-    component: (resolve) => require(['@/views/login'], resolve),
-    hidden: true
-  },
-  {
+  }, {
     path: '/404',
     component: (resolve) => require(['@/views/error/404'], resolve),
     hidden: true
-  },
-  {
+  }, {
     path: '/401',
     component: (resolve) => require(['@/views/error/401'], resolve),
     hidden: true
-  },
-  {
-    path: '',
-    component: Layout,
-    redirect: 'home',
-    children: [
-      {
-        path: 'home',
-        component: (resolve) => require(['@/views/index'], resolve),
-        name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
-      }
-    ]
-  },
-  {
+  }, {
+    path: '/login',
+    component: (resolve) => require(['@/views/login'], resolve),
+    hidden: true
+  }, {
     path: '/user',
     component: Layout,
     hidden: true,
@@ -78,6 +60,52 @@ export const constantRoutes = [
         component: (resolve) => require(['@/views/system/user/profile/index'], resolve),
         name: 'Profile',
         meta: { title: '个人中心', icon: 'user' }
+      }
+    ]
+  }, {
+    path: '',
+    component: Layout,
+    redirect: 'home',
+    children: [
+      {
+        name: 'home',
+        path: 'home',
+        component: (resolve) => require(['@/views/index'], resolve),
+        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+      }
+    ]
+  }, {
+    path: '/system',
+    component: Layout,
+    redirect: 'noredirect',
+    alwaysShow: true,
+    meta: { title: "系统管理", icon: "system" },
+    children: [
+      {
+        name: 'user',
+        path: "user",
+        component: (resolve) => require(["@/views/system/user/index"], resolve),
+        meta: { title: "用户管理", icon: "user" },
+      }
+    ]
+  }, {
+    path: '/alert',
+    component: Layout,
+    redirect: 'noredirect',
+    alwaysShow: true,
+    meta: { title: "告警管理", icon: "alert" },
+    children: [
+      {
+        name: 'events',
+        path: 'events',
+        component: (resolve) => require(["@/views/monitor/silence/index"], resolve),
+        meta: { title: "全部告警", icon: 'bug' }
+      },
+      {
+        name: 'silence',
+        path: 'silence',
+        component: (resolve) => require(["@/views/monitor/silence/index"], resolve),
+        meta: { title: "屏蔽规则", icon: 'silence' }
       }
     ]
   }
