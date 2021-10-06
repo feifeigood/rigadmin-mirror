@@ -27,7 +27,7 @@ export const getRouters = () => {
                                 "hidden": false,
                                 "component": "ext/node/index",
                                 "meta": {
-                                    "title": "主机指标",
+                                    "title": "Linux指标",
                                     "noCache": true,
                                     "link": null
                                 }
@@ -50,6 +50,17 @@ export const getRouters = () => {
                                 "component": "ext/mysql/index",
                                 "meta": {
                                     "title": "MySQL指标",
+                                    "noCache": true,
+                                    "link": null
+                                }
+                            },
+                            {
+                                "name": "WMI",
+                                "path": "wmi",
+                                "hidden": false,
+                                "component": "ext/wmi/index",
+                                "meta": {
+                                    "title": "Windows指标",
                                     "noCache": true,
                                     "link": null
                                 }
