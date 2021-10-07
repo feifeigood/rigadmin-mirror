@@ -3,7 +3,7 @@
     <div class="app-container-search">
       <div>
         <el-input
-          placeholder="请输入查询关键字"
+          placeholder="请输入屏蔽策略关键字"
           v-model="queryParams.searchTerm"
           clearable
           @keyup.enter.native="handleQuery"
@@ -63,9 +63,19 @@
           show-overflow-tooltip
         />
         <el-table-column label="操作" align="center" width="100">
-          <template>
-            <el-link type="primary" icon="el-icon-edit">修改</el-link>
-            <el-link type="primary" icon="el-icon-delete">删除</el-link>
+          <template slot-scope="scope">
+            <el-link
+              type="primary"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.row)"
+              >修改</el-link
+            >
+            <el-link
+              type="primary"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              >删除</el-link
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -77,21 +87,15 @@
         @pagination="getSilences"
       />
     </div>
-    <el-dialog
-      :title="title"
-      :visible.sync="open"
-      width="500px"
-      append-to-body
-    ></el-dialog>
   </div>
 </template>
 
 <script>
-import { listSilence } from "@/api/monitor/silence";
+import { listUpstreams, deleteSilence, listSilence } from "@/api/monitor/am";
 import dateFormat from "dateformat";
 
 export default {
-  name: "",
+  name: "Silence",
   data() {
     return {
       // table params
@@ -108,12 +112,20 @@ export default {
       // search
       showSearch: true,
       queryParams: {},
+
+      upstreams: {},
     };
   },
   created() {
+    this.getUpstreams();
     this.getSilences();
   },
   methods: {
+    getUpstreams() {
+      listUpstreams().then((response) => {
+        this.upstreams = response;
+      });
+    },
     getSilences() {
       this.loading = true;
       listSilence(this.queryParams)
@@ -161,6 +173,47 @@ export default {
       return dateFormat(endsAt, "yyyy/mm/dd hh:MM:ss");
     },
     handleAdd() {},
+    handleDelete(row) {
+      this.$confirm("确认删除告警屏蔽策略?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            var name = "";
+            this.upstreams.instances.every((v) => {
+              if (v.cluster == row.cluster) {
+                name = v.clusterMembers[0];
+                return false;
+              }
+
+              return true;
+            });
+
+            if (name == "") {
+              this.msgError("删除屏蔽策略失败, 没有找到匹配的实例名称");
+              return;
+            }
+
+            deleteSilence(name, row.silence.id)
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              })
+              .catch((e) => {
+                this.msgError("删除屏蔽策略失败: " + e);
+              });
+          }
+        },
+      }).then(() => {
+        this.getSilences();
+        this.msgSuccess("删除成功!");
+      });
+    },
+    handleEdit(row) {
+      this.msgSuccess("功能暂未实现!");
+    },
     handleQuery() {
       this.paginationParams.pageNum = 1;
       this.getSilences();

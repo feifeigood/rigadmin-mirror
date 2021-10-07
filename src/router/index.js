@@ -63,7 +63,7 @@ export const constantRoutes = [
       }
     ]
   }, {
-    path: '',
+    path: '/',
     component: Layout,
     redirect: 'home',
     children: [
@@ -89,7 +89,7 @@ export const constantRoutes = [
       }
     ]
   }, {
-    path: '/alert',
+    path: '/am',
     component: Layout,
     redirect: 'noredirect',
     alwaysShow: true,
@@ -98,7 +98,7 @@ export const constantRoutes = [
       {
         name: 'events',
         path: 'events',
-        component: (resolve) => require(["@/views/monitor/silence/index"], resolve),
+        component: (resolve) => require(["@/views/monitor/am/index"], resolve),
         meta: { title: "全部告警", icon: 'bug' }
       },
       {
