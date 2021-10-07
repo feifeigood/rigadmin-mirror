@@ -63,13 +63,13 @@ export const constantRoutes = [
       }
     ]
   }, {
-    path: '/',
+    path: '',
     component: Layout,
-    redirect: 'home',
+    redirect: '/',
     children: [
       {
         name: 'home',
-        path: 'home',
+        path: '/',
         component: (resolve) => require(['@/views/index'], resolve),
         meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
       }
