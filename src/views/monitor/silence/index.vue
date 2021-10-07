@@ -13,7 +13,12 @@
     <div class="app-container-content">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button type="primary" plain icon="el-icon-plus" size="mini"
+          <el-button
+            type="primary"
+            plain
+            icon="el-icon-plus"
+            size="mini"
+            @click="handleAdd()"
             >新建告警屏蔽</el-button
           >
         </el-col>
@@ -172,7 +177,9 @@ export default {
       const endsAt = Date.parse(row.silence.endsAt);
       return dateFormat(endsAt, "yyyy/mm/dd hh:MM:ss");
     },
-    handleAdd() {},
+    handleAdd() {
+      this.msgSuccess("功能暂未实现!");
+    },
     handleDelete(row) {
       this.$confirm("确认删除告警屏蔽策略?", "警告", {
         confirmButtonText: "确定",

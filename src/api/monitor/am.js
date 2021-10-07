@@ -19,3 +19,7 @@ export function listSilence(query) {
     }
     return request({ url: '/api/v1/am/silences', method: 'get', params: params })
 }
+
+export function ackAlert(alertmanager, payload) {
+    return request({ url: '/api/v1/am/proxy/alertmanager/' + alertmanager + '/api/v2/silences', method: 'post', data: payload })
+}
