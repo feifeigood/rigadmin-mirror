@@ -40,13 +40,6 @@ module.exports = {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
       },
-      [process.env.VUE_APP_ALERTPAGER_API]: {
-        target: `http://alertpager.monitoring.ecn.zenlayer.net`,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_ALERTPAGER_API]: ''
-        }
-      },
       [process.env.VUE_APP_METRICS_API]: {
         target: `http://128.1.84.78:9090`,
         changeOrigin: true,
