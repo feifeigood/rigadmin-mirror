@@ -1,7 +1,14 @@
 <template>
   <div class="app-container">
     <div class="app-container-search">
-      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" @submit.native.prevent>
+      <el-form
+        :model="queryParams"
+        ref="queryForm"
+        :inline="true"
+        v-show="showSearch"
+        label-width="68px"
+        @submit.native.prevent
+      >
         <el-form-item label="用户名称" prop="username">
           <el-input
             v-model="queryParams.username"
@@ -13,12 +20,19 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleQuery"
+            >搜索</el-button
+          >
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+            >重置</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
-
 
     <div class="app-container-content">
       <el-row :gutter="10" class="mb8">
@@ -30,19 +44,59 @@
             size="mini"
             @click="handleAdd"
             v-hasPermi="['system:user:add']"
-          >新增</el-button>
+            >新增</el-button
+          >
         </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        <right-toolbar
+          :showSearch.sync="showSearch"
+          @queryTable="getList"
+        ></right-toolbar>
       </el-row>
 
-      <el-table v-loading="loading" :data="userList" 
-        border
-      >
-        <el-table-column label="用户编号" align="center" key="uid" prop="uid" width="160"/>
-        <el-table-column label="用户名称" align="left" key="username" prop="username" :show-overflow-tooltip="true" />
-        <el-table-column label="用户全称" align="left" key="fullname" prop="fullname" :show-overflow-tooltip="true" />
-        <el-table-column label="用户邮箱" align="left" key="email" prop="email"  :show-overflow-tooltip="true"/>
-        <el-table-column label="手机号码" align="left" key="phone" prop="phone"  width="120" />
+      <el-table v-loading="loading" :data="userList" border>
+        <el-table-column
+          label="用户UID"
+          align="left"
+          key="uid"
+          prop="uid"
+          width="150"
+        />
+        <el-table-column
+          label="用户名称"
+          align="left"
+          key="username"
+          prop="username"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="用户全称"
+          align="left"
+          key="fullname"
+          prop="fullname"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="用户角色"
+          align="left"
+          key="roles"
+          prop="roles[0].name"
+          width="100"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="用户邮箱"
+          align="left"
+          key="email"
+          prop="email"
+          :show-overflow-tooltip="true"
+        />
+        <el-table-column
+          label="手机号码"
+          align="left"
+          key="phone"
+          prop="phone"
+          width="120"
+        />
         <el-table-column label="状态" align="center" key="disabled" width="80">
           <template slot-scope="scope">
             <el-switch
@@ -53,37 +107,48 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="created_at"  width="160">
+        <el-table-column
+          label="创建时间"
+          align="center"
+          prop="created_at"
+          width="160"
+        >
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="140" class-name="operate">
+        <el-table-column
+          label="操作"
+          align="center"
+          width="140"
+          class-name="operate"
+        >
           <template slot-scope="scope">
             <el-link
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:user:edit']"
-            >修改</el-link>
+              >修改</el-link
+            >
             <el-link
               type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:user:delete']"
-            >删除</el-link>
+              >删除</el-link
+            >
           </template>
         </el-table-column>
       </el-table>
       <pagination
-        v-show="total>0"
+        v-show="total > 0"
         :total="total"
         :page.sync="paginationParams.pageNum"
         :limit.sync="paginationParams.pageSize"
         @pagination="getList"
       />
     </div>
-
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -100,9 +165,26 @@
         <el-form-item label="手机号码" prop="phone">
           <el-input v-model="form.phone" placeholder="手机号码" />
         </el-form-item>
+        <el-form-item label="用户角色" prop="role">
+          <el-select
+            v-model="form.role"
+            placeholder="用户角色"
+            :disabled="isUserUpdate"
+          >
+            <el-option
+              v-for="item in roles"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitLoading"
+          >确 定</el-button
+        >
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -110,7 +192,14 @@
 </template>
 
 <script>
-import {  listUser, delUser, addUser, updateUser , changeUserStatus} from "@/api/system/user";
+import {
+  listRole,
+  listUser,
+  delUser,
+  addUser,
+  updateUser,
+  changeUserStatus,
+} from "@/api/system/user";
 
 export default {
   username: "User",
@@ -134,6 +223,8 @@ export default {
       total: 0,
       // user数据
       userList: [],
+      roles: [],
+      isUserUpdate: false,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -147,53 +238,63 @@ export default {
       // 表单校验
       rules: {
         username: [
-          { required: true, message: "用户名称不能为空", trigger: "blur" }
+          { required: true, message: "用户名称不能为空", trigger: "blur" },
         ],
         fullname: [
-          { required: true, message: "用户全称不能为空", trigger: "blur" }
+          { required: true, message: "用户全称不能为空", trigger: "blur" },
         ],
         email: [
           {
             required: true,
             type: "email",
             message: "'请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
-          }
+            trigger: ["blur", "change"],
+          },
         ],
         phone: [
           {
             required: true,
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
+        role: [{ required: true, message: "角色不能为空", trigger: "blur" }],
       },
-      paginationParams:{
-        pageNum:1,
+      paginationParams: {
+        pageNum: 1,
         pageSize: 10,
-      }
+      },
     };
   },
   created() {
+    this.getRoles();
     this.getList();
   },
   methods: {
+    getRoles() {
+      listRole().then((response) => {
+        this.roles = response;
+      });
+    },
     /** 查询user列表 */
     getList() {
       this.loading = true;
-      console.log(this.queryParams)
-      listUser(this.queryParams).then(response => {
-          const start = (this.paginationParams.pageNum-1) * this.paginationParams.pageSize;
+      console.log(this.queryParams);
+      listUser(this.queryParams)
+        .then((response) => {
+          const start =
+            (this.paginationParams.pageNum - 1) *
+            this.paginationParams.pageSize;
           const end = start + this.paginationParams.pageSize;
           this.userList = response.slice(start, end);
           this.total = response.length;
           this.loading = false;
-        }
-      ).catch(e=>{
-        this.userList=[];
-        this.loading = false;
-      });
+        })
+        .catch((e) => {
+          this.userList = [];
+          this.loading = false;
+        });
     },
 
     // 取消按钮
@@ -227,61 +328,68 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加用户";
+      this.isUserUpdate = false;
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.operateNum = 2;
       this.reset();
-      const data = {...row};
-      console.log(data)
+      const data = { ...row };
+      console.log(data);
+      data.role = data.roles[0].id;
       this.form = data;
       this.open = true;
       this.title = "修改用户";
+      this.isUserUpdate = true;
     },
     /** 提交按钮 */
-    submitForm: function() {
-      this.$refs["form"].validate(valid => {
+    submitForm: function () {
+      this.$refs["form"].validate((valid) => {
         if (valid) {
           this.submitLoading = true;
-          console.log(this.getActionAndParams())
-          const {action, params} = this.getActionAndParams();
+          console.log(this.getActionAndParams());
+          const { action, params } = this.getActionAndParams();
           if (action) {
-            action(params).then(response => {
-              this.msgSuccess("操作成功");
-              this.open = false;
-              this.submitLoading = false;
-              this.getList();
-            }).catch(e=>{
-              this.submitLoading = false;
-            });
+            action(params)
+              .then((response) => {
+                this.msgSuccess("操作成功");
+                this.open = false;
+                this.submitLoading = false;
+                this.getList();
+              })
+              .catch((e) => {
+                this.submitLoading = false;
+              });
           }
         }
       });
     },
-    getActionAndParams(){
+    getActionAndParams() {
       const res = {
-        action:undefined,
-        params: undefined
-      }
+        action: undefined,
+        params: undefined,
+      };
       switch (this.operateNum) {
         case 1:
-          res.action = addUser,
-          res.params = {
-            username: this.form.username,
-            fullname: this.form.fullname,
-            email: this.form.email,
-            phone: this.form.phone,
-          }
+          (res.action = addUser),
+            (res.params = {
+              username: this.form.username,
+              fullname: this.form.fullname,
+              email: this.form.email,
+              phone: this.form.phone,
+              roles: [this.form.role],
+            });
           break;
         case 2:
-          res.action = updateUser,
-          res.params = {
-            uid : this.form.uid,
-            username: this.form.username,
-            fullname: this.form.fullname,
-            phone: this.form.phone,
-            email: this.form.email,
-          }
+          (res.action = updateUser),
+            (res.params = {
+              uid: this.form.uid,
+              username: this.form.username,
+              fullname: this.form.fullname,
+              phone: this.form.phone,
+              email: this.form.email,
+              roles: [this.form.role],
+            });
           break;
         default:
           break;
@@ -292,69 +400,75 @@ export default {
     handleDelete(row) {
       const ids = row.id;
       const names = row.username;
-      console.log(row)
+      console.log(row);
       this.$confirm('是否确认删除用户名称为"' + names + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              delUser(ids).then(()=>{
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            delUser(ids)
+              .then(() => {
                 instance.confirmButtonLoading = false;
                 done();
-              }).catch(e=>{
+              })
+              .catch((e) => {
                 instance.confirmButtonLoading = false;
                 this.msgError("删除失败");
-              })
-            } else {
-              done();
-            }
+              });
+          } else {
+            done();
           }
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        },
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      });
     },
     // 用户状态修改
     handleStatusChange(row) {
       let text = row.disabled === false ? "启用" : "停用";
-      this.$confirm('确认要"' + text + '""' + row.username + '"用户吗?', "警告", {
+      this.$confirm(
+        '确认要"' + text + '""' + row.username + '"用户吗?',
+        "警告",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
           beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
+            if (action === "confirm") {
               instance.confirmButtonLoading = true;
-              changeUserStatus(row.uid).then(()=>{
-                instance.confirmButtonLoading = false;
-                this.msgSuccess(text + "成功");
-                done();
-              }).catch(e=>{
-                instance.confirmButtonLoading = false;
-                this.msgError("删除失败");
-              })
+              changeUserStatus(row.uid)
+                .then(() => {
+                  instance.confirmButtonLoading = false;
+                  this.msgSuccess(text + "成功");
+                  done();
+                })
+                .catch((e) => {
+                  instance.confirmButtonLoading = false;
+                  this.msgError("删除失败");
+                });
             } else {
               done();
             }
-          }
-        }).catch(function() {
-          row.disabled = !row.disabled ;
-        });
+          },
+        }
+      ).catch(function () {
+        row.disabled = !row.disabled;
+      });
     },
-
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>
-  .app-container-content{
-    ::v-deep .operate{
-        .cell{
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-      }
+.app-container-content {
+  ::v-deep .operate {
+    .cell {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
     }
-
   }
+}
 </style>

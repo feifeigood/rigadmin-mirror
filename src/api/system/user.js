@@ -1,10 +1,17 @@
 import request from '@/utils/request'
-import { praseStrEmpty } from "@/utils/ruoyi";
+
+export function listRole(query) {
+  return request({
+    url: '/api/v1/roles',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询用户列表
 export function listUser(query) {
   return request({
-    url: '/api/v1/users', 
+    url: '/api/v1/users',
     method: 'get',
     params: query
   })
