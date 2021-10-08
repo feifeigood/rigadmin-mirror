@@ -36,6 +36,7 @@
     "url": "http://gitlab.zenlayer.net/gia/rigadmin.git"
   },
   "dependencies": {
+    "@johmun/vue-tags-input": "^2.1.0",
     "@riophae/vue-treeselect": "0.4.0",
     "axios": "0.21.0",
     "clipboard": "2.0.6",

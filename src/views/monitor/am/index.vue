@@ -1,6 +1,14 @@
 <template>
   <div class="app-container">
-    <div class="app-container-search"></div>
+    <div class="app-container-search">
+      <vue-tags-input 
+        v-model="tag"
+        :tags="tags"
+        :placeholder="'查询条件'"
+        @tags-changed="newTags => tags = newTags"
+        style="max-width:100%"
+      />
+    </div>
     <div class="app-container-content">
       <el-table v-loading="loading" :data="alertgroups" border>
         <el-table-column
@@ -64,11 +72,21 @@
 <script>
 import { listAlerts, ackAlert, listUpstreams } from "@/api/monitor/am";
 import dateFormat from "dateformat";
+import VueTagsInput from '@johmun/vue-tags-input';
 
 export default {
   name: "Alerts",
+  components: {VueTagsInput},
   data() {
     return {
+      tag: '',
+      tags: [ 
+        {
+          text: '@receiver=pager',
+        }, {
+          text: '@state=active',
+        }
+      ],
       loading: true,
       alertgroups: [],
       total: 0,
@@ -207,8 +225,19 @@ export default {
       }
     },
   },
+  watch:{
+    tags(v){
+      const tagList = v.map(item => item.text)
+      this.queryParams = { filters: tagList }
+      this.handleQuery();
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+::v-deep .ti-tag{
+  background-color: rgba(0,0,0,.1);
+  color:var(--current-color,#0960bd) !important;
+}
 </style>
