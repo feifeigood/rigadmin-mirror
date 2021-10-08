@@ -65,6 +65,17 @@ export const getRouters = () => {
                                     "link": null
                                 }
                             },
+                            {
+                                "name": "Ping4",
+                                "path": "ping4",
+                                "hidden": false,
+                                "component": "ext/ping4/index",
+                                "meta": {
+                                    "title": "Ping4探测",
+                                    "noCache": true,
+                                    "link": null
+                                }
+                            },
                         ]
                     },
                     {
@@ -160,46 +171,7 @@ export const getRouters = () => {
                             },
                         ]
                     },
-                    // {
-                    //     "name": "System",
-                    //     "path": "/system",
-                    //     "hidden": false,
-                    //     "redirect": "noRedirect",
-                    //     "component": "Layout",
-                    //     "alwaysShow": true,
-                    //     "meta": {
-                    //         "title": "系统管理",
-                    //         "icon": "system",
-                    //         "noCache": false,
-                    //         "link": null
-                    //     },
-                    //     "children": [
-                    //         {
-                    //             "name": "User",
-                    //             "path": "user",
-                    //             "hidden": false,
-                    //             "component": "system/user/index",
-                    //             "meta": {
-                    //                 "title": "用户管理",
-                    //                 "icon": "user",
-                    //                 "noCache": true,
-                    //                 "link": null
-                    //             }
-                    //         },
-                    //         // {
-                    //         //     "name": "Role",
-                    //         //     "path": "role",
-                    //         //     "hidden": false,
-                    //         //     "component": "system/role/index",
-                    //         //     "meta": {
-                    //         //         "title": "角色管理",
-                    //         //         "icon": "peoples",
-                    //         //         "noCache": true,
-                    //         //         "link": null
-                    //         //     }
-                    //         // },
-                    //     ]
-                    // },
+
 
                 ]
             }
