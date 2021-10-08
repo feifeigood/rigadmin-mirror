@@ -27,7 +27,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasPermi="['monitor:node:add']"
+            v-hasRole="['Operator']"
           >新增</el-button>
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -52,7 +52,7 @@
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-if="scope.row.source == 'rigserver'"
-              v-hasPermi="['monitor:node:edit']"
+              v-hasRole="['Operator']"
             >修改</el-link>
           </template>
         </el-table-column>

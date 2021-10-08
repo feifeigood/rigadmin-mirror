@@ -43,7 +43,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasPermi="['monitor:host:add']"
+            v-hasRole="['Operator']"
           >新增</el-button>
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
@@ -73,13 +73,13 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['monitor:host:edit']"
+              v-hasRole="['Operator']"
             >修改</el-link>
             <el-link
               type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['monitor:host:delete']"
+              v-hasRole="['Operator']"
             >删除</el-link>
           </template>
         </el-table-column>

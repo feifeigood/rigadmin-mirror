@@ -29,7 +29,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasPermi="['monitor:rulesample:add']"
+            v-hasRole="['Operator']"
           >新增</el-button>
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
@@ -63,20 +63,20 @@
               type="primary"
               icon="el-icon-edit"
               @click.stop="handleUpdate(scope.row)"
-              v-hasPermi="['monitor:rulesample:edit']"
+              v-hasRole="['Operator']"
             >修改</el-link>
             <el-link
               type="success"
               style="color:#348e37"
               icon="el-icon-document"
               @click.stop="handleShowDetail(scope.row)"
-              v-hasPermi="['monitor:rulesample:detail']"
+              v-hasRole="['Operator']"
             >详情</el-link>
             <el-link
               type="danger"
               icon="el-icon-delete"
               @click.stop="handleDelete(scope.row)"
-              v-hasPermi="['monitor:rulesample:delete']"
+              v-hasRole="['Operator']"
             >删除</el-link>
           </template>
         </el-table-column>

@@ -43,7 +43,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasPermi="['system:user:add']"
+            v-hasRole="['Admin']"
             >新增</el-button
           >
         </el-col>
@@ -128,14 +128,14 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['system:user:edit']"
+              v-hasRole="['Admin']"
               >修改</el-link
             >
             <el-link
               type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['system:user:delete']"
+              v-hasRole="['Admin']"
               >删除</el-link
             >
           </template>

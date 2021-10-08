@@ -43,7 +43,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasPermi="['monitor:project:add']"
+            v-hasRole="['Operator']"
             >新增</el-button
           >
         </el-col>
@@ -97,7 +97,7 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['monitor:project:edit']"
+              v-hasRole="['Operator']"
               >修改</el-link
             >
             <!-- <el-link

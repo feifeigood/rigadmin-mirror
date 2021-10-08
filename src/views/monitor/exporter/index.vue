@@ -34,7 +34,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-hasPermi="['monitor:exporter:add']"
+              v-hasRole="['Operator']"
             >新增</el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -59,7 +59,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
-                v-hasPermi="['monitor:exporter:edit']"
+                v-hasRole="['Operator']"
               >修改</el-link>
               <el-link
                 type="primary"
