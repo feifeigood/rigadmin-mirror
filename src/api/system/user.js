@@ -71,8 +71,16 @@ export function updateUserPwd(oldPassword, newPassword) {
     new: newPassword
   }
   return request({
-    url: '/system/user/profile/updatePwd',
+    url: '/api/v1/self/password',
     method: 'put',
     params: data
+  })
+}
+
+// 查询用户个人信息
+export function getUserProfile() {
+  return request({
+    url: '/api/v1/self/info',
+    method: 'get'
   })
 }
