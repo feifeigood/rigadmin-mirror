@@ -1,5 +1,6 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { checkRole } from '@/utils/permission'
 
 const user = {
   state: {
@@ -7,7 +8,9 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    isAdmin: false,
+    isOperator: false
   },
 
   mutations: {
@@ -25,6 +28,12 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_ISADMIN: (state, isAdmin) => {
+      state.isAdmin = isAdmin
+    },
+    SET_ISOPERATOR: (state, isOperator) => {
+      state.isOperator = isOperator
     }
   },
 
@@ -53,6 +62,8 @@ const user = {
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
+            commit('SET_ISADMIN', checkRole(['Admin']))
+            commit('SET_ISOPERATOR', checkRole(['Operator']))
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }

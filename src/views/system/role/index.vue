@@ -115,6 +115,7 @@
             active-value="0"
             inactive-value="1"
             @change="handleStatusChange(scope.row)"
+            :disabled="!$store.getters.isOperator"
           ></el-switch>
         </template>
       </el-table-column>

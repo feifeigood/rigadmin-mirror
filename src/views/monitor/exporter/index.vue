@@ -34,7 +34,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-hasRole="['Operator']"
+              :disabled="!$store.getters.isOperator"
             >新增</el-button>
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -59,7 +59,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
-                v-hasRole="['Operator']"
+                :disabled="!$store.getters.isOperator"
               >修改</el-link>
               <el-link
                 type="primary"

@@ -57,7 +57,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasRole="['Operator']"
+          :disabled="!$store.getters.isOperator"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -66,9 +66,8 @@
           plain
           icon="el-icon-edit"
           size="mini"
-          :disabled="single"
+          :disabled="single || !$store.getters.isOperator"
           @click="handleUpdate"
-          v-hasRole="['Operator']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -77,9 +76,8 @@
           plain
           icon="el-icon-delete"
           size="mini"
-          :disabled="multiple"
+          :disabled="multiple || !$store.getters.isOperator"
           @click="handleDelete"
-          v-hasRole="['Operator']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -90,7 +88,7 @@
           size="mini"
           :loading="exportLoading"
           @click="handleExport"
-          v-hasRole="['Operator']"
+          :disabled="!$store.getters.isOperator"
         >导出</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -100,7 +98,7 @@
           icon="el-icon-refresh"
           size="mini"
           @click="handleClearCache"
-          v-hasRole="['Operator']"
+          :disabled="!$store.getters.isOperator"
         >清理缓存</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -126,14 +124,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasRole="['Operator']"
+            :disabled="!$store.getters.isOperator"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasRole="['Operator']"
+            :disabled="!$store.getters.isOperator"
           >删除</el-button>
         </template>
       </el-table-column>

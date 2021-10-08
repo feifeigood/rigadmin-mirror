@@ -43,7 +43,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasRole="['Admin']"
+            :disabled="!$store.getters.isAdmin"
             >新增</el-button
           >
         </el-col>
@@ -104,6 +104,7 @@
               :active-value="false"
               :inactive-value="true"
               @change="handleStatusChange(scope.row)"
+              :disabled="!$store.getters.isAdmin"
             ></el-switch>
           </template>
         </el-table-column>
@@ -128,14 +129,14 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasRole="['Admin']"
+              :disabled="!$store.getters.isAdmin"
               >修改</el-link
             >
             <el-link
               type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasRole="['Admin']"
+              :disabled="!$store.getters.isAdmin"
               >删除</el-link
             >
           </template>

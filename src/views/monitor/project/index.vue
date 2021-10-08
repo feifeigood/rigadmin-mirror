@@ -43,7 +43,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasRole="['Operator']"
+            :disabled="!$store.getters.isOperator"
             >新增</el-button
           >
         </el-col>
@@ -83,6 +83,7 @@
               :active-value="1"
               :inactive-value="0"
               @change="handleStatusChange(scope.row)"
+              :disabled="!$store.getters.isOperator"
             ></el-switch>
           </template>
         </el-table-column>
@@ -97,7 +98,7 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasRole="['Operator']"
+              :disabled="!$store.getters.isOperator"
               >修改</el-link
             >
             <!-- <el-link

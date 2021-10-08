@@ -29,7 +29,7 @@
             icon="el-icon-plus"
             size="mini"
             @click="handleAdd"
-            v-hasRole="['Operator']"
+            :disabled="!$store.getters.isOperator"
           >新增</el-button>
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
@@ -52,6 +52,7 @@
                 :active-value="1"
                 :inactive-value="0"
                 @change="handleStatusChange(scope.row)"
+                :disabled="!$store.getters.isOperator"
               ></el-switch>
             </div>
 
@@ -63,20 +64,20 @@
               type="primary"
               icon="el-icon-edit"
               @click.stop="handleUpdate(scope.row)"
-              v-hasRole="['Operator']"
+              :disabled="!$store.getters.isOperator"
             >修改</el-link>
             <el-link
               type="success"
               style="color:#348e37"
               icon="el-icon-document"
               @click.stop="handleShowDetail(scope.row)"
-              v-hasRole="['Operator']"
+              
             >详情</el-link>
             <el-link
               type="danger"
               icon="el-icon-delete"
               @click.stop="handleDelete(scope.row)"
-              v-hasRole="['Operator']"
+              :disabled="!$store.getters.isOperator"
             >删除</el-link>
           </template>
         </el-table-column>

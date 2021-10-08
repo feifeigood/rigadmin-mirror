@@ -73,7 +73,7 @@ export function updateUserPwd(oldPassword, newPassword) {
   return request({
     url: '/api/v1/self/password',
     method: 'put',
-    params: data
+    data: data
   })
 }
 
