@@ -5,7 +5,11 @@
     @select="handleSelect"
   >
     <template v-for="(item, index) in topMenus">
-      <el-menu-item :style="{'--theme': theme}" :index="item.path" :key="index" v-if="index < visibleNumber"
+      <el-menu-item
+        :style="{ '--theme': theme }"
+        :index="item.path"
+        :key="index"
+        v-if="index < visibleNumber"
         ><svg-icon :icon-class="item.meta.icon" />
         {{ item.meta.title }}</el-menu-item
       >
@@ -38,7 +42,7 @@ export default {
       // 是否为首次加载
       isFrist: false,
       // 当前激活菜单的 index
-      currentIndex: undefined
+      currentIndex: undefined,
     };
   },
   computed: {
@@ -52,9 +56,9 @@ export default {
         if (menu.hidden !== true) {
           // 兼容顶部栏一级菜单内部跳转
           if (menu.path === "/") {
-              topMenus.push(menu.children[0]);
+            topMenus.push(menu.children[0]);
           } else {
-              topMenus.push(menu);
+            topMenus.push(menu);
           }
         }
       });
@@ -70,12 +74,14 @@ export default {
       this.routers.map((router) => {
         for (var item in router.children) {
           if (router.children[item].parentPath === undefined) {
-            if(router.path === "/") {
-              router.children[item].path = "/redirect/" + router.children[item].path;
+            if (router.path === "/") {
+              router.children[item].path =
+                "/redirect/" + router.children[item].path;
             } else {
-			  if(!this.ishttp(router.children[item].path)) {
-                router.children[item].path = router.path + "/" + router.children[item].path;
-			  }
+              if (!this.ishttp(router.children[item].path)) {
+                router.children[item].path =
+                  router.path + "/" + router.children[item].path;
+              }
             }
             router.children[item].parentPath = router.path;
           }
@@ -100,17 +106,17 @@ export default {
       }
       var routes = this.activeRoutes(activePath);
       if (routes.length === 0) {
-        activePath = this.currentIndex || this.routers[0].path
+        activePath = this.currentIndex || this.routers[0].path;
         this.activeRoutes(activePath);
       }
       return activePath;
     },
   },
   beforeMount() {
-    window.addEventListener('resize', this.setVisibleNumber)
+    window.addEventListener("resize", this.setVisibleNumber);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.setVisibleNumber)
+    window.removeEventListener("resize", this.setVisibleNumber);
   },
   mounted() {
     this.setVisibleNumber();
@@ -145,14 +151,14 @@ export default {
           }
         });
       }
-      if(routes.length > 0) {
+      if (routes.length > 0) {
         this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
       }
       return routes;
     },
-	ishttp(url) {
-      return url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1
-    }
+    ishttp(url) {
+      return url.indexOf("http://") !== -1 || url.indexOf("https://") !== -1;
+    },
   },
 };
 </script>
@@ -170,13 +176,13 @@ export default {
 }
 
 .el-menu--horizontal > .el-menu-item.is-active {
-  border-bottom: 3px solid #{'var(--theme)'};
+  border-bottom: 3px solid #{"var(--theme)"};
   color: #303133;
 }
 
 /* submenu item */
 .el-menu--horizontal > .el-submenu .el-submenu__title {
-	height: 50px !important;
-	line-height: 50px !important;
+  height: 50px !important;
+  line-height: 50px !important;
 }
 </style>

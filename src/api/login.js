@@ -15,23 +15,24 @@ export function login(username, password) {
 
 // 获取用户详细信息
 export function getInfo() {
-  return new Promise(resolve => {
-    resolve(
-      {
-        "msg": "操作成功",
-        "code": 200,
-        "permissions": [
-          "*:*:*"
-        ],
-        "roles": [
-          "admin"
-        ],
-        "user": {
-          "userName": "admin",
-          "avatar": "",
-        }
+  return request({
+    url: "/api/v1/self/info",
+    method: "get"
+  }).then(response => {
+    return {
+      "msg": "操作成功",
+      "code": 200,
+      "permissions": [
+        "*:*:*"
+      ],
+      "roles": [
+        response.roles[0].name,
+      ],
+      "user": {
+        "userName": response.username,
+        "avatar": response.avatar | "",
       }
-    )
+    }
   })
 }
 
