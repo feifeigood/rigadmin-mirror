@@ -236,8 +236,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .ti-tag{
-  background-color: rgba(0,0,0,.1);
-  color:var(--current-color,#0960bd) !important;
+::v-deep .ti-input{
+  border-radius: 4px;
+  border-color: rgb(220, 223, 230);
+  .ti-tag{
+    background-color: rgba(0,0,0,.1);
+    color:var(--current-color,#0960bd) !important;
+  }
 }
 </style>
