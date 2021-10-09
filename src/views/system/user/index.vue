@@ -121,7 +121,7 @@
         <el-table-column
           label="操作"
           align="center"
-          width="140"
+          width="210"
           class-name="operate"
         >
           <template slot-scope="scope">
@@ -131,6 +131,13 @@
               @click="handleUpdate(scope.row)"
               :disabled="!$store.getters.isAdmin"
               >修改</el-link
+            >
+            <el-link
+              type="warning"
+              icon="el-icon-key"
+              @click="handleResetPwd(scope.row)"
+              :disabled="!$store.getters.isAdmin"
+              >重置密码</el-link
             >
             <el-link
               type="danger"
@@ -200,6 +207,7 @@ import {
   addUser,
   updateUser,
   changeUserStatus,
+  resetUserPwd
 } from "@/api/system/user";
 
 export default {
@@ -396,6 +404,35 @@ export default {
           break;
       }
       return res;
+    },
+    /** 重置密码按钮操作 */
+    handleResetPwd(row) {
+      this.$prompt('请输入"' + row.username + '"的新密码', "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        closeOnClickModal: false,
+        inputPattern: /^.{5,20}$/,
+        inputErrorMessage: "用户密码长度必须介于 5 和 20 之间",
+        beforeClose: (action, instance, done) => {
+          console.log(instance)
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            resetUserPwd(row.uid,instance.inputValue)
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              })
+              .catch((e) => {
+                instance.confirmButtonLoading = false;
+                this.msgError("重置密码失败！");
+              });
+          } else {
+            done();
+          }
+        },
+      }).then(({ value }) => {
+          this.msgSuccess("修改成功，新密码是：" + value);
+        }).catch(() => {});
     },
     /** 删除按钮操作 */
     handleDelete(row) {

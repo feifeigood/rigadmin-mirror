@@ -50,15 +50,41 @@ module.exports = {
     },
     disableHostCheck: true
   },
-  configureWebpack: {
-    devtool: process.env.NODE_ENV === 'development' ? 'source-map' : undefined,
-    name: name,
-    resolve: {
-      alias: {
-        '@': resolve('src')
+  configureWebpack:
+  (config) => {
+      if (process.env.NODE_ENV === 'development') {
+          // 为开发环境修改配置...
+          config.devtool = 'source-map'
+      } else {
+          // 为生产环境修改配置...
+          config.devtool = undefined
       }
-    }
+      config.name = name
+
+      //配置别名
+      config.resolve.alias['@'] = resolve('src')
+      
+      //将dart-scss编译成的css文件里面的双字节字符再转回16进制码
+      config.module.rules.filter(rule => {
+        return rule.test.toString().indexOf("scss") !== -1;
+      }).forEach(rule => {
+        rule.oneOf.forEach(oneOfRule => {
+          oneOfRule.use.splice(oneOfRule.use.indexOf(require.resolve('sass-loader')), 0,
+            { loader: require.resolve("css-unicode-loader")})
+        })
+      }) 
+
   },
+
+  // configureWebpack: {
+  //   devtool: process.env.NODE_ENV === 'development' ? 'source-map' : undefined,
+  //   name: name,
+  //   resolve: {
+  //     alias: {
+  //       '@': resolve('src')
+  //     }
+  //   }
+  // },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
