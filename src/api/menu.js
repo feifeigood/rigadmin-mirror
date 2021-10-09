@@ -55,6 +55,17 @@ export const getRouters = () => {
                                 }
                             },
                             {
+                                "name": "OracleDB",
+                                "path": "oracledb",
+                                "hidden": false,
+                                "component": "ext/oracledb/index",
+                                "meta": {
+                                    "title": "OracleDB指标",
+                                    "noCache": true,
+                                    "link": null
+                                }
+                            },
+                            {
                                 "name": "WMI",
                                 "path": "wmi",
                                 "hidden": false,
