@@ -86,6 +86,12 @@ export const constantRoutes = [
         path: "user",
         component: (resolve) => require(["@/views/system/user/index"], resolve),
         meta: { title: "用户管理", icon: "user" },
+      },
+      {
+        name: 'usergroup',
+        path: "usergroup",
+        component: (resolve) => require(["@/views/system/usergroup/index"], resolve),
+        meta: { title: "团队管理", icon: "team" },
       }
     ]
   }, {
