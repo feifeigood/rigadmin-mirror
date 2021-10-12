@@ -81,25 +81,38 @@ service.interceptors.response.use(res => {
   }
 },
   error => {
-    console.log(error.response)
-    let { message } = error;
-    if (error?.response?.data?.error) {
-      message = error?.response?.data?.error;
+    if (error.response.status === 401) {
+      MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+      ).then(() => {
+        store.dispatch('LogOut').then(() => {
+          location.href = '/';
+        })
+      })
+    }else{
+      let { message } = error;
+      if (error?.response?.data?.error || error?.response?.data?.message) {
+        message = error?.response?.data?.error || error?.response?.data?.message;
+      }
+      if (message == "Network Error") {
+        message = "后端接口连接异常";
+      }
+      else if (message.includes("timeout")) {
+        message = "系统接口请求超时";
+      }
+      else if (message.includes("Request failed with status code")) {
+        message = "系统接口" + message.substr(message.length - 3) + "异常";
+      }
+      Message({
+        message: message,
+        type: 'error',
+        duration: 5 * 1000
+      })
     }
-    if (message == "Network Error") {
-      message = "后端接口连接异常";
-    }
-    else if (message.includes("timeout")) {
-      message = "系统接口请求超时";
-    }
-    else if (message.includes("Request failed with status code")) {
-      message = "系统接口" + message.substr(message.length - 3) + "异常";
-    }
-    Message({
-      message: message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+
     return Promise.reject(error)
   }
 )
