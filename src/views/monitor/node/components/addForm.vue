@@ -156,6 +156,7 @@ export default {
         this.open = true;
         this.reset();
         this.title = "修改节点";
+        console.log(this.form)
         getHost(this.selectedId).then(response => {
           this.form = response;
           this.form.labels = this.tranObjToArr(response?.labels);
@@ -196,7 +197,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        name: [],
+        name: '',
         labels:[{
           key: undefined,
           value: undefined
@@ -209,7 +210,6 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.submitLoading = true;
-          console.log(this.getActionAndParams())
           const {action, params} = this.getActionAndParams();
           if (action) {
             action(params).then(response => {
@@ -286,9 +286,9 @@ export default {
       }
     },
   },
-  beforeDestroy(){
-    this.$refs.selectToInput.$refs.input.removeEventListener('blur', this.handleSelectBlur)
-  }
+  // beforeDestroy(){
+  //   this.$refs.selectToInput.$refs.input.removeEventListener('blur', this.handleSelectBlur)
+  // }
 
 }
 </script>

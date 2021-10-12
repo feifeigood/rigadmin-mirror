@@ -39,7 +39,7 @@
         <el-table-column label="编号" align="center" prop="id" width="80"/>
         <el-table-column label="名称" align="left" prop="name" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <router-link :to="{ name: 'Host', params: { farm_id: scope.row.id }}" class="link-type">
+            <router-link :to="{ name: 'Host', params: { farm_id: scope.row.id}}" class="link-type">
               <span>{{ scope.row.name }}</span>
             </router-link>
           </template>
@@ -51,8 +51,7 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-if="scope.row.source == 'rigserver'"
-              :disabled="!$store.getters.isOperator"
+              :disabled="!$store.getters.isOperator || scope.row.source !== 'rigserver'"
             >修改</el-link>
           </template>
         </el-table-column>

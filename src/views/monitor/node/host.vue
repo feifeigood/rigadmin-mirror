@@ -53,7 +53,17 @@
         border
       >
         <el-table-column label="节点编号" align="center" prop="id" width="80"/>
-        <el-table-column label="节点名称" align="left" prop="name" :show-overflow-tooltip="true" />
+        <el-table-column label="节点名称" align="left" width="120" prop="name" :show-overflow-tooltip="true" />
+        <el-table-column label="标签" align="left" prop="labels">
+          <template slot-scope="scope">
+            <el-tag 
+              class="labelTag"
+              v-for="(value,key,index) in (scope.row.labels)"
+              :key="index"
+            >{{`${key}=${value}`}}</el-tag>
+
+          </template>
+        </el-table-column>
         <el-table-column label="所属节点组" align="left" width="120" prop="farm_id" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <span>{{ transNodeName(scope.row.farm_id) }}</span>
@@ -73,13 +83,13 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              :disabled="!$store.getters.isOperator"
+              :disabled="!$store.getters.isOperator || source !== 'rigserver'"
             >修改</el-link>
             <el-link
               type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              :disabled="!$store.getters.isOperator"
+              :disabled="!$store.getters.isOperator || source !== 'rigserver'"
             >删除</el-link>
           </template>
         </el-table-column>
@@ -149,6 +159,9 @@ export default {
   computed: {
     activeColumns() {
       return this.columns?.filter(item => item.visible) || [];
+    },
+    source(){
+      return this.farmList.filter(item=> item.id == this.queryParams.farm_id)[0]?.source
     }
   },
   created() {
@@ -168,6 +181,15 @@ export default {
     
   },
   methods: {
+    tranObjToArr(obj){
+      if (!obj) {
+        return []
+      }
+      return Object.entries(obj).map(item => ({
+        key: item[0],
+        value: item[1]
+      }))
+    },
     /** 查询host列表 */
     getList() {
       this.loading = true;
@@ -179,6 +201,7 @@ export default {
             id: item.id,
             name: item.name,
             farm_id: item.farm_id,
+            labels: item.labels,
             ...item.labels
           }));
           console.log(res)
@@ -279,6 +302,9 @@ export default {
         align-items: center;
       }
     }
-
+    .labelTag{
+      margin-right: 6px;
+      margin-top: 4px;
+    }
   }
 </style>
