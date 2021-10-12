@@ -25,6 +25,7 @@
               :data="usergroups"
               :props="defaultProps"
               :filter-node-method="filterNode"
+              node-key="id"
               default-expand-all
               check-on-click-node
               highlight-current
@@ -35,13 +36,30 @@
       </el-col>
       <el-col :span="20" :xs="24" style="height: 100%">
         <div class="app-container-right">
-          <div class="app-container-left-search">
-            <el-row>
-              <el-col :span="24" style="padding: 10px">
-                {{ ugDetail.name }}
-              </el-col>
-            </el-row>
+          <div class="ug-detail-container">
+            <div class="title-container">
+              <div class="title">{{ ugDetail.name }}</div>
+              <el-link 
+                class="operate-icon" 
+                type="primary" 
+                icon="el-icon-edit"
+                @click="handleUGEdit()"
+              ></el-link>
+              <el-link 
+                class="operate-icon" 
+                type="danger" 
+                icon="el-icon-delete"
+                @click="handleUGDelete()"
+              ></el-link>
+            </div>
+            <div class="remark">
+              备注：{{ ugDetail.description }}
+            </div>
           </div>
+          <member 
+            :ugId="ugDetail.id"
+            :ugName="ugDetail.name"
+          />
         </div>
       </el-col>
     </el-row>
@@ -67,12 +85,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitUGForm">确 定</el-button>
+        <el-button type="primary" @click="submitUGForm" :loading="submitLoading">确 定</el-button>
         <el-button
-          @click="
+          @click="()=>{
             ugOpen = false;
             reset();
-          "
+          }"
           >取 消</el-button
         >
       </div>
@@ -81,12 +99,17 @@
 </template>
 
 <script>
-import { listUserGroup, createUserGroup } from "@/api/system/usergroup";
+import { listUserGroup, createUserGroup,updateUserGroup,delUserGroup } from "@/api/system/usergroup";
+import Member from './member.vue';
 
 export default {
   name: "UserGroup",
+  components: { Member },
   data() {
     return {
+      newUGId: -1,
+      submitLoading:false,
+      operateNum:0,
       loading: true,
       defaultProps: {
         label: "name",
@@ -94,8 +117,6 @@ export default {
       filterText: "",
       usergroups: [],
       total: 0,
-
-      currentNodekey: "",
 
       title: "",
       ugOpen: false,
@@ -113,6 +134,17 @@ export default {
     filterText(val) {
       this.$refs.tree.filter(val);
     },
+    usergroups(val){
+      console.log(1)
+      this.$nextTick(()=>{
+        const id = this.newUGId == -1 ? val[0]?.id : this.newUGId;
+        const detail = this.newUGId == -1 ? 
+          (val[0] || {}) : 
+          this.usergroups.filter(item => item.id == this.newUGId)[0]
+         this.$refs.tree.setCurrentKey(id)
+         this.ugDetail = detail
+      })
+    }
   },
   methods: {
     getUserGroups() {
@@ -127,26 +159,89 @@ export default {
       return data.name.indexOf(value) !== -1;
     },
     handleUGAdd() {
+      this.operateNum = 1;
+      this.reset();
       this.title = "创建团队";
       this.ugOpen = true;
     },
     handleUGEdit(id) {
+      this.operateNum = 2;
+      this.reset();
+      this.ugForm = {...this.ugDetail};
       this.title = "编辑团队信息";
       this.ugOpen = true;
     },
     handleUGClick(data) {
       this.ugDetail = data;
     },
+    handleUGDelete(){
+      const ids = this.ugDetail.id;
+      const names = this.ugDetail.name;
+      this.$confirm('是否确认删除团队名称为"' + names + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            delUserGroup(ids)
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              })
+              .catch((e) => {
+                instance.confirmButtonLoading = false;
+                this.msgError("删除失败");
+              });
+          } else {
+            done();
+          }
+        },
+      }).then(() => {
+        this.newUGId = -1;
+        this.getUserGroups();
+        this.msgSuccess("删除成功");
+      });
+    },
     submitUGForm: function () {
       this.$refs["ugForm"].validate((valid) => {
         if (valid) {
-          createUserGroup(this.ugForm).then((response) => {
-            this.msgSuccess("创建成功");
-            this.ugOpen = false;
-            this.getUserGroups();
-          });
+          this.submitLoading = true;
+          const { action, params } = this.getActionAndParams();
+          if (action) {
+            action(params)
+              .then((response) => {
+                this.newUGId = response.id;
+                this.msgSuccess("操作成功");
+                this.ugOpen = false;
+                this.submitLoading = false;
+                this.getUserGroups();
+              })
+              .catch((e) => {
+                this.submitLoading = false;
+              });
+          }
         }
       });
+    },
+    getActionAndParams() {
+      const res = {
+        action: undefined,
+        params: undefined,
+      };
+      switch (this.operateNum) {
+        case 1:
+          res.action = createUserGroup
+          res.params = {...this.ugForm}
+          break;
+        case 2:
+          res.action = updateUserGroup
+          res.params = {...this.ugForm}
+          break;
+        default:
+          break;
+      }
+      return res;
     },
     reset() {
       this.ugForm = {
@@ -181,6 +276,7 @@ export default {
     background-color: #fff;
     flex-direction: column;
     height: 100%;
+    padding: 12px 10px 6px 10px;
   }
   .app-container-search {
     padding: 12px 10px 6px 10px;
@@ -213,6 +309,47 @@ export default {
           align-items: center;
         }
       }
+    }
+  }
+}
+.app-container-left-content{
+  ::v-deep .el-tree{
+    .el-tree-node{
+      .el-tree-node__content{
+        padding: 8px 16px;
+        height: 36px;
+      }
+      &.is-current .el-tree-node__content{
+        background-color: #d4ecf9;
+      }
+    }
+  }
+}
+.app-container-right{
+  .ug-detail-container{
+    border: 1px solid #e0dee2;
+    padding: 10px;
+    margin-bottom: 20px;
+    background: #f3f6f9;
+    .title-container{
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      .title{
+        color: rgb(0, 0, 0);
+        font-weight: 700;
+        font-size: 14px;
+        margin-right: 4px;
+      }
+      .operate-icon{
+        margin: 0 4px;
+        font-weight: 700;
+        font-size: 14px;
+      }
+    }
+    .remark{
+      color: rgb(102, 102, 102);
+      font-size: 12px;
     }
   }
 }

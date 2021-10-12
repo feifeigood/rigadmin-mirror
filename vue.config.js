@@ -51,7 +51,7 @@ module.exports = {
     disableHostCheck: true
   },
   configureWebpack:
-  (config) => {
+    (config) => {
       if (process.env.NODE_ENV === 'development') {
           // 为开发环境修改配置...
           config.devtool = 'source-map'
@@ -63,7 +63,7 @@ module.exports = {
 
       //配置别名
       config.resolve.alias['@'] = resolve('src')
-      
+
       //将dart-scss编译成的css文件里面的双字节字符再转回16进制码
       config.module.rules.filter(rule => {
         return rule.test.toString().indexOf("scss") !== -1;

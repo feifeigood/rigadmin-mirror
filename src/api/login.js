@@ -29,6 +29,7 @@ export function getInfo() {
         response.roles[0].name,
       ],
       "user": {
+        "userId": response.uid,
         "userName": response.username,
         "avatar": response.avatar | "",
       }
