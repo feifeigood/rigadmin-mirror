@@ -65,6 +65,8 @@ service.interceptors.response.use(res => {
         location.href = '/';
       })
     })
+
+    
   } else if (code === 500) {
     Message({
       message: msg,
@@ -85,13 +87,28 @@ service.interceptors.response.use(res => {
       MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
         confirmButtonText: '重新登录',
         cancelButtonText: '取消',
-        type: 'warning'
-      }
-      ).then(() => {
-        store.dispatch('LogOut').then(() => {
-          location.href = '/';
-        })
-      })
+        type: 'warning',
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            store.dispatch('LogOut')
+              .then(() => {
+                instance.confirmButtonLoading = false;
+                done();
+              })
+              .catch((e) => {
+                instance.confirmButtonLoading = false;
+                this.msgError("退出失败");
+              });
+          } else {
+            done();
+          }
+        },
+      }).then(() => {
+        location.href = '/';
+      });
+
+
     }else{
       let { message } = error;
       if (error?.response?.data?.error || error?.response?.data?.message) {
