@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :visible.sync="open" width="760px" @close="handleClose" append-to-body>
+  <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="760px" @close="handleClose" append-to-body>
     <div v-loading="loading">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row v-if="operateNum == 1">
@@ -436,6 +436,8 @@ export default {
               duration: this.form.duration,
               def_val: this.form.def_val,
               labels: this.tranArrToObj(this.form.labels),
+              annotations: this.tranArrToObj(this.form.annotations),
+              description: this.form.description,
             }
           }
           break;

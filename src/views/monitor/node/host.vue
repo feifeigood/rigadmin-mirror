@@ -304,7 +304,8 @@ export default {
     }
     .labelTag{
       margin-right: 6px;
-      margin-top: 4px;
+      margin-top: 2px;
+      margin-bottom: 2px;
     }
   }
 </style>
